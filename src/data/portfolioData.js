@@ -65,22 +65,24 @@ import k11 from "../assets/projects/klinkahub/k11.jpg";
 import k12 from "../assets/projects/klinkahub/k12.jpg";
 import k13 from "../assets/projects/klinkahub/k13.jpg";
 
+import resumeDoc from "../assets/resume/Hanz_Resume.docx?url";
+
 export const personalInfo = {
   name: "HANZ CHRISTIAN ANGELO G. MAGBAL",
   shortName: "Hanz Magbal",
   role: "4th Year BSIT Student",
   institution: "University of Southern Philippines Foundation",
   location: "Cebu City, Philippines",
-  email: "hanzchristianangelo@gmail.com",
+  email: "hanzhmagbal@gmail.com",
   phone: "09927870100",
   bio: "Leveraging my IT background to bridge innovative technology with real-world solutions. Driven by a passion for creating scalable, impactful software architectures and data-driven systems.",
   longBio:
     "As a senior Information Technology student at the University of Southern Philippines Foundation, I have cultivated a deep expertise in modern software engineering, artificial intelligence integration, and cloud-native architectures. My academic and project journey focuses on developing high-performance, scalable systems that translate complex data into actionable real-world insights.",
   socials: {
     github: "https://github.com/h4nzdev",
-    linkedin: "https://linkedin.com",
-    email: "mailto:hanzchristianangelo@gmail.com",
-    resume: "/resume.pdf",
+    linkedin: "https://linkedin.com/in/hanz-christian-angelo-g-magbal-685206361?originalSubdomain=ph",
+    email: "mailto:hanzhmagbal@gmail.com",
+    resume: resumeDoc,
   },
   stats: [
     { label: "Year in BSIT", value: "4th" },
