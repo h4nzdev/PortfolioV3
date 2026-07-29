@@ -139,8 +139,8 @@ const Hero = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-3 rounded-xl border border-[#004aad]/50 bg-[#004aad]/10 text-sm font-bold font-mono uppercase tracking-wider text-[#64ffda] hover:bg-[#004aad]/30 transition-all group shadow-[0_0_15px_rgba(0,74,173,0.3)] hover:shadow-[0_0_25px_rgba(100,255,218,0.2)]"
               >
-                <Icon icon="lucide:download" className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
-                <span>Download Resume</span>
+                <Icon icon="lucide:eye" className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
+                <span>View Resume</span>
               </a>
             </div>
 

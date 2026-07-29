@@ -65,7 +65,7 @@ import k11 from "../assets/projects/klinkahub/k11.jpg";
 import k12 from "../assets/projects/klinkahub/k12.jpg";
 import k13 from "../assets/projects/klinkahub/k13.jpg";
 
-import resumeDoc from "../assets/resume/Hanz_Resume.docx?url";
+import resumeDoc from "../assets/resume/Hanz_Resume.pdf";
 
 export const personalInfo = {
   name: "HANZ CHRISTIAN ANGELO G. MAGBAL",
