@@ -46,6 +46,15 @@
   background: var(--accent);
 }
 
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Futuristic Cyber UI Utilities */
 .cyber-panel {
   background: rgba(10, 25, 47, 0.85);

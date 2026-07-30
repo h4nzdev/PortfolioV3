@@ -252,8 +252,11 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Right Side: CardSwap Stack */}
-        <div className="relative w-full h-[500px] lg:h-[600px] z-10 pointer-events-none">
+        {/* Right Side: Projects Display */}
+        <div className="w-full relative z-10">
+          
+          {/* Desktop View: CardSwap Stack */}
+          <div className="hidden lg:block relative w-full h-[500px] lg:h-[600px] pointer-events-none">
           {/* pointer-events-none on container so we can click through the empty space, auto on the actual swap container */}
           <div className="absolute inset-0 pointer-events-auto">
             <CardSwap
@@ -336,6 +339,76 @@ const Projects = () => {
               ))}
             </CardSwap>
           </div>
+        </div>
+
+        {/* Mobile View: Scroll Snap Carousel */}
+          <div className="lg:hidden w-full overflow-x-auto snap-x snap-mandatory flex gap-6 pb-8 pt-6 scrollbar-hide">
+            {featuredProjects.map((project, index) => (
+              <div 
+                key={project.id} 
+                onClick={() => navigate(`/project/${project.id}`)}
+                className="snap-center shrink-0 w-[85vw] max-w-[340px] p-5 rounded-2xl bg-[#0a192f] border border-[#004aad]/40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex flex-col gap-5 cursor-pointer relative mt-2 mb-4"
+              >
+                {/* Floating Top Tab */}
+                <div className="absolute -top-3 left-4 bg-[#0a192f] border border-[#004aad]/50 px-3 py-1 rounded-md flex items-center shadow-lg z-50">
+                  <span className="text-[#64ffda] text-[9px] font-bold font-mono tracking-widest uppercase">
+                    SYS.0{index + 1} // {project.category}
+                  </span>
+                </div>
+
+                {/* Image Section */}
+                <div className="w-full h-48 rounded-xl overflow-hidden bg-white border border-[#004aad]/40 flex items-center justify-center p-4">
+                  <img 
+                    src={project.images?.[0] || project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-contain" 
+                  />
+                </div>
+
+                {/* Content Section */}
+                <div className="flex flex-col flex-1">
+                  <h3 className="text-2xl font-black text-[#e6f1ff] font-outfit leading-tight mb-1">
+                    {project.title}
+                  </h3>
+                  <p className="text-[#004aad] text-[9px] font-bold font-mono uppercase tracking-wider mb-3">
+                    {">"} {project.tagline}
+                  </p>
+                  
+                  <p className="text-[#8892b0] text-[12px] leading-relaxed mb-4 font-mono line-clamp-3">
+                    {project.description}
+                  </p>
+
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {project.techStack.slice(0, 3).map((tech, idx) => (
+                      <div key={idx} className="flex items-center gap-1 px-2 py-1 bg-[#020c1b]/50 rounded text-[9px] font-bold text-[#64ffda] border border-[#004aad]/30 font-mono">
+                         <Icon icon={getTechIcon(tech)} className="w-3 h-3" />
+                         <span>{tech}</span>
+                      </div>
+                    ))}
+                    {project.techStack.length > 3 && (
+                      <div className="flex items-center px-2 py-1 bg-[#020c1b]/50 rounded text-[9px] font-bold text-[#64ffda] border border-[#004aad]/30 font-mono">
+                         +{project.techStack.length - 3}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-auto">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/project/${project.id}`);
+                      }} 
+                      className="w-full py-2.5 rounded-lg cyber-button flex items-center justify-center gap-2 font-bold font-mono text-[10px]"
+                    >
+                      VIEW ARCHIVE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
 
       </div>

@@ -110,7 +110,7 @@ const Hero = () => {
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-black text-[#e6f1ff] leading-[1.05] font-outfit tracking-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-black text-[#e6f1ff] leading-[1.05] font-outfit tracking-tight pb-4">
               IT Systems <br/>
               Architect based <br/>
               in <span className="text-[#004aad] relative inline-block">
@@ -131,8 +131,8 @@ const Hero = () => {
               <span>{personalInfo.institution}</span>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="pt-6 flex items-center gap-4">
+            {/* CTA Buttons & Mobile Socials */}
+            <div className="pt-6 flex flex-col sm:flex-row items-center sm:items-start gap-6 w-full relative z-30">
               <a
                 href={personalInfo.socials.resume}
                 target="_blank"
@@ -142,6 +142,19 @@ const Hero = () => {
                 <Icon icon="lucide:eye" className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
                 <span>View Resume</span>
               </a>
+
+              {/* Inline Socials for Mobile Only */}
+              <div className="flex lg:hidden cyber-panel rounded-full p-2 items-center gap-3">
+                <a href={personalInfo.socials.linkedin} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#0a192f] border border-[#004aad]/50 flex items-center justify-center text-[#64ffda] hover:bg-[#004aad]/20 transition-all shadow-sm">
+                  <Icon icon="mdi:linkedin" className="w-5 h-5" />
+                </a>
+                <a href={personalInfo.socials.github} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#0a192f] border border-[#004aad]/50 flex items-center justify-center text-[#64ffda] hover:bg-[#004aad]/20 transition-all shadow-sm">
+                  <Icon icon="mdi:github" className="w-5 h-5" />
+                </a>
+                <a href={personalInfo.socials.email} className="w-10 h-10 rounded-full bg-[#0a192f] border border-[#004aad]/50 flex items-center justify-center text-[#64ffda] hover:bg-[#004aad]/20 transition-all shadow-sm">
+                  <Icon icon="lucide:mail" className="w-5 h-5" />
+                </a>
+              </div>
             </div>
 
           </div>
@@ -195,8 +208,8 @@ const Hero = () => {
 
         </div>
 
-        {/* Absolute Bottom Elements (Socials) */}
-        <div className="absolute bottom-10 left-6 right-6 lg:left-12 lg:right-12 flex items-end justify-between pointer-events-none z-30">
+        {/* Absolute Bottom Elements (Socials) - Hidden on mobile as they are inline */}
+        <div className="absolute bottom-10 left-6 right-6 lg:left-12 lg:right-12 hidden lg:flex items-end justify-between pointer-events-none z-30">
           
           {/* Socials Pill */}
           <div className="pointer-events-auto cyber-panel rounded-full p-2 flex items-center gap-3">

@@ -69,13 +69,14 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none mt-4 md:mt-6 px-4">
-      <div 
-        className={`pointer-events-auto flex items-center justify-between w-full bg-[#0a192f]/90 backdrop-blur-xl border border-[#004aad]/40 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden
-          ${isScrolled && !isExpanded 
-            ? 'max-w-[220px] px-4 py-2 cursor-pointer' 
-            : 'max-w-[95vw] lg:max-w-5xl px-6 py-2.5'
-          }`}
+    <header className="fixed top-0 left-0 w-full z-50 pointer-events-none pt-4 md:pt-6 px-4">
+      <div className="relative mx-auto flex justify-center w-full max-w-[95vw] lg:max-w-5xl">
+        <div 
+          className={`pointer-events-auto flex items-center justify-between w-full bg-[#0a192f]/90 backdrop-blur-xl border border-[#004aad]/40 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden h-16 lg:h-[72px]
+            ${isScrolled && !isExpanded 
+              ? 'max-w-[220px] px-4 cursor-pointer' 
+              : 'max-w-full px-6'
+            }`}
         onClick={() => {
           if (isScrolled && !isExpanded) {
             setIsExpanded(true);
@@ -196,6 +197,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      </div>
     </header>
   );
 };
