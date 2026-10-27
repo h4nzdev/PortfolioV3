@@ -1,0 +1,21 @@
+{
+  "name": "Hanz Magbal | Portfolio & Dispatches",
+  "short_name": "Hanz.dev",
+  "description": "Portfolio and technical engineering notes of Hanz Christian Angelo Magbal.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F7F2",
+  "theme_color": "#171715",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

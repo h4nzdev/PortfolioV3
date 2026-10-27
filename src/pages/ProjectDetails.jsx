@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { GithubIcon as Github } from '../components/SocialIcons';
 import { Icon } from '@iconify/react';
+import SEO from '../components/common/SEO';
 
 const getTechIcon = (tech) => {
   const t = tech.toLowerCase();
@@ -95,6 +96,31 @@ export default function ProjectDetails() {
 
   return (
     <div key={id} className="min-h-screen bg-[#F8F7F2] text-[#171715] pt-12 pb-24 px-4 sm:px-6 lg:px-8 selection:bg-[#C8B99A] selection:text-[#171715]">
+      {/* Dynamic SEO Meta */}
+      <SEO
+        title={`${project.title} — Case Study`}
+        description={project.overview || project.description}
+        keywords={`${project.title}, ${project.category}, ${project.techStack?.join(', ')}, Hanz Magbal`}
+        canonicalUrl={`https://hanzmagbal.com/project/${project.id}`}
+        ogImage={images[0] || project.image}
+        ogType="article"
+        schemaData={{
+          '@context': 'https://schema.org',
+          '@type': 'TechArticle',
+          headline: project.title,
+          description: project.overview || project.description,
+          author: {
+            '@type': 'Person',
+            name: 'Hanz Christian Angelo G. Magbal',
+            url: 'https://hanzmagbal.com',
+          },
+          publisher: {
+            '@type': 'Person',
+            name: 'Hanz Magbal',
+          },
+          image: images[0] || project.image,
+        }}
+      />
       <div className="max-w-6xl mx-auto space-y-12">
         
         {/* Top Control Bar with Stepper & Return Action */}

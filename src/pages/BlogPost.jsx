@@ -19,6 +19,7 @@ import ReadingProgress from '../components/blog/ReadingProgress';
 import TableOfContents from '../components/blog/TableOfContents';
 import CodeBlock from '../components/blog/CodeBlock';
 import PostAuthorBio from '../components/blog/PostAuthorBio';
+import SEO from '../components/common/SEO';
 import { sound } from '../utils/sound';
 import logoImg from '../assets/logo.png';
 
@@ -84,6 +85,37 @@ export default function BlogPost() {
       key={post.slug}
       className="min-h-screen bg-[#F8F7F2] text-[#171715] selection:bg-[#C8B99A] selection:text-[#171715] relative pb-24"
     >
+      {/* Dynamic SEO Meta for Post */}
+      <SEO
+        title={post.title}
+        description={post.excerpt}
+        keywords={`${post.tags.join(', ')}, ${post.category}, Hanz Magbal`}
+        canonicalUrl={`https://hanzmagbal.com/blog/${post.slug}`}
+        ogType="article"
+        schemaData={{
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: post.excerpt,
+          datePublished: post.publishedDate,
+          author: {
+            '@type': 'Person',
+            name: post.author.name,
+            url: 'https://hanzmagbal.com',
+          },
+          publisher: {
+            '@type': 'Person',
+            name: 'Hanz Magbal',
+          },
+          keywords: post.tags.join(', '),
+          articleSection: post.category,
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `https://hanzmagbal.com/blog/${post.slug}`,
+          },
+        }}
+      />
+
       {/* Viewport Reading Progress Bar */}
       <ReadingProgress targetRef={articleRef} />
 

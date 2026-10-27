@@ -5,6 +5,7 @@ import { BLOG_CATEGORIES, getAllPosts } from '../data/blog/blogPosts';
 import BlogHero from '../components/blog/BlogHero';
 import BlogFilterBar from '../components/blog/BlogFilterBar';
 import BlogCard from '../components/blog/BlogCard';
+import SEO from '../components/common/SEO';
 import { sound } from '../utils/sound';
 import logoImg from '../assets/logo.png';
 
@@ -56,6 +57,25 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-[#F8F7F2] text-[#171715] selection:bg-[#C8B99A] selection:text-[#171715] relative pb-20">
+      {/* Dynamic SEO Meta */}
+      <SEO
+        title="Engineering Dispatches & Field Notes"
+        description="Technical reflections on building distributed systems, edge vision models, resilient microservices, and modern web architectures by Hanz Magbal."
+        canonicalUrl="https://hanzmagbal.com/blog"
+        keywords="Engineering Blog, Software Architecture, System Design, Biometrics, YOLOv8, Docker, React 19, Hanz Magbal"
+        schemaData={{
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'Hanz Magbal Engineering Dispatches',
+          description: 'Technical notes on software architecture, AI & embedded systems, and DevOps.',
+          url: 'https://hanzmagbal.com/blog',
+          author: {
+            '@type': 'Person',
+            name: 'Hanz Christian Angelo G. Magbal',
+          },
+        }}
+      />
+
       {/* Top Fixed Control Bar */}
       <header className="sticky top-0 z-40 px-4 sm:px-6 lg:px-8 py-3.5 bg-[#F8F7F2]/80 backdrop-blur-md border-b border-[#C8B99A]/40 transition-all">
         <div className="max-w-6xl mx-auto flex items-center justify-between">

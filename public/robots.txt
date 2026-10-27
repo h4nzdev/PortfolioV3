@@ -1,0 +1,7 @@
+# Robots.txt for Hanz Magbal Portfolio
+# Optimized for Googlebot, Bingbot, and modern web crawlers
+User-agent: *
+Allow: /
+
+# Sitemap Location
+Sitemap: https://hanzmagbal.com/sitemap.xml

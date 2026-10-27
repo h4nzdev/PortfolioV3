@@ -11,6 +11,7 @@ import ContactArchitectural3D from '../components/contact/ContactArchitectural3D
 import ContactFormAndFooter2D from '../components/contact/ContactFormAndFooter2D';
 import { ScrollProgressTopBar, SectionReveal } from '../components/common/ScrollReveal';
 import BackToTop from '../components/common/BackToTop';
+import SEO from '../components/common/SEO';
 
 import CertificateModal from '../components/overlays/CertificateModal';
 
@@ -65,6 +66,12 @@ export default function Home() {
       id="site"
       className="relative w-full min-h-screen bg-[#F8F7F2] text-[#171715] selection:bg-[#C8B99A] selection:text-[#171715]"
     >
+      {/* Dynamic SEO & OpenGraph Meta */}
+      <SEO
+        title="Full-Stack Engineer & Solutions Architect"
+        canonicalUrl="https://hanzmagbal.com/"
+      />
+
       {/* Global Scroll Progress Bar */}
       <ScrollProgressTopBar />
 
