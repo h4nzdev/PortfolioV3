@@ -620,9 +620,10 @@ export default function HeroWorkspace3D({ onExploreWork, onAboutMe }) {
 
             <a
               href={resumePdf}
-              download="Hanz_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/80 border border-[#C8B99A]/50 text-xs font-mono font-medium text-[#292824] hover:bg-[#E5DCCB]/60 transition-colors shadow-xs"
-              title="Download Resume PDF"
+              title="View Resume PDF"
             >
               <FileText size={14} />
               <span>Resume PDF</span>

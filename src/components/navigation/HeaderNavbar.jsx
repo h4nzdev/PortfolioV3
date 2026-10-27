@@ -104,9 +104,10 @@ export default function HeaderNavbar({ activeSection, onNavigate }) {
           {/* Resume PDF */}
           <a
             href={resumePdf}
-            download="Hanz_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/85 border border-[#C8B99A]/50 text-xs font-mono font-medium text-[#292824] hover:bg-[#E5DCCB]/40 transition-all backdrop-blur-md shadow-xs"
-            title="Download Hanz's Resume PDF"
+            title="View Hanz's Resume PDF"
           >
             <FileText size={13} />
             <span>CV</span>
@@ -163,11 +164,12 @@ export default function HeaderNavbar({ activeSection, onNavigate }) {
           <div className="mt-3 pt-3 border-t border-[#C8B99A]/40 flex items-center justify-between px-1">
             <a
               href={resumePdf}
-              download="Hanz_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-xs font-mono text-[#292824] hover:underline flex items-center gap-1"
             >
               <FileText size={13} />
-              <span>Download CV</span>
+              <span>View CV</span>
             </a>
             <button
               onClick={() => handleNavClick('contact')}

@@ -78,12 +78,13 @@ export default function NavigationOverlay({ activeScene, onJumpToProgress, onOpe
             {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} className="text-[#171715]" />}
           </button>
 
-          {/* Resume Download */}
+          {/* Resume View */}
           <a
             href={resumePdf}
-            download="Hanz_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 border border-[#C8B99A]/50 text-xs font-mono font-medium text-[#292824] hover:bg-[#E5DCCB]/50 transition-all backdrop-blur-md shadow-xs"
-            title="Download Hanz's Resume PDF"
+            title="View Hanz's Resume PDF"
           >
             <FileText size={14} />
             <span>CV</span>

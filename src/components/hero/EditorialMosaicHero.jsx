@@ -248,9 +248,10 @@ export default function EditorialMosaicHero({ onExploreWork, onAboutMe, onOpenPr
 
             <a
               href={resumePdf}
-              download="Hanz_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/10 border border-[#C8B99A]/30 text-xs font-mono text-[#F8F7F2] hover:bg-[#C8B99A] hover:text-[#171715] transition-all"
-              title="Download Resume"
+              title="View Resume PDF"
             >
               <FileText size={13} />
               <span>Resume PDF</span>

@@ -96,9 +96,10 @@ export default function EditorialHero({ scrollProgress, onExploreWork, onAboutMe
 
             <a
               href={resumeDoc}
-              download="Hanz_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/80 border border-[#C8B99A]/50 text-[#171715] hover:bg-[#E5DCCB]/50 transition-all shadow-xs"
-              title="Download Resume"
+              title="View Resume"
               aria-label="Resume"
             >
               <FileText size={17} />

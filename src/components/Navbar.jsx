@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Download, ChevronRight } from 'lucide-react';
+import { Menu, X, FileText, ChevronRight } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 import logoImg from '../assets/logo.png';
 
@@ -143,7 +143,7 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-5 py-2 rounded-xl border border-[#004aad]/50 text-xs font-bold font-mono uppercase tracking-wider text-[#64ffda] transition-all group whitespace-nowrap hover:bg-[#004aad]/20"
             >
-              <Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
               <span>RESUME</span>
             </a>
           </div>
@@ -191,8 +191,8 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#004aad]/50 hover:bg-[#004aad]/20 text-xs font-bold font-mono text-[#64ffda] uppercase tracking-wider group transition-all"
             >
-              <Download className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              <span>DOWNLOAD RESUME</span>
+              <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>VIEW RESUME</span>
             </a>
           </div>
         </div>

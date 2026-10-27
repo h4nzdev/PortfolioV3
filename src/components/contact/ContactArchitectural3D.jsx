@@ -645,7 +645,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         tag: 'VERIFIED CREDENTIAL',
         desc: "Verified academic Dean's list records, software engineering stack, and full background.",
         statusLabel: 'Format',
-        statusValue: 'PDF Document (700KB)',
+        statusValue: 'PDF Document (New Tab)',
         url: resumePdf,
         spineLabel: 'RESUME',
         color: '#F8F7F2',
@@ -929,14 +929,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         sound.playClick();
         const hit = intersects[0].object;
         if (hit.userData.url) {
-          if (hit.userData.id === 'resume') {
-            const link = document.createElement('a');
-            link.href = hit.userData.url;
-            link.download = 'Hanz_Magbal_Resume.pdf';
-            link.click();
-          } else {
-            window.open(hit.userData.url, '_blank');
-          }
+          window.open(hit.userData.url, '_blank', 'noopener,noreferrer');
         }
       }
     };
@@ -1252,7 +1245,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
               </a>
               <a
                 href={resumePdf}
-                download="Hanz_Magbal_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-3 py-1.5 rounded-full bg-white/80 hover:bg-[#171715] hover:text-[#F8F7F2] border border-[#C8B99A]/50 text-[#171715] transition-colors"
               >
                 CV (PDF)

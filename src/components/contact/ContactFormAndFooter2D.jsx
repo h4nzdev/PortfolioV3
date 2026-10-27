@@ -177,9 +177,10 @@ export default function ContactFormAndFooter2D() {
                 </a>
                 <a
                   href={resumePdf}
-                  download="Hanz_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="p-2.5 rounded-full bg-[#F8F7F2] border border-[#C8B99A]/40 text-[#171715] hover:bg-[#171715] hover:text-[#F8F7F2] transition-colors"
-                  title="Download Resume"
+                  title="View Resume (PDF)"
                 >
                   <FileText className="w-4 h-4" />
                 </a>
