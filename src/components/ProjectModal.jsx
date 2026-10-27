@@ -37,7 +37,7 @@ const ProjectModal = ({ project, onClose }) => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [onClose]);
+  }, [onClose, project]);
 
   if (!project) return null;
 

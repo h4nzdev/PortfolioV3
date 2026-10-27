@@ -1,27 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 
 const App = () => {
   return (
-    <div className="min-h-screen w-full bg-[#020c1b] text-[#ccd6f6] font-sans selection:bg-[#004aad] selection:text-white">
-      {/* Interactive GSAP Cursor */}
+    <div className="min-h-screen w-full bg-[#F8F7F2] text-[#151515] font-sans selection:bg-[#C8B99A] selection:text-[#151515]">
+      {/* Precision Tactile Cursor */}
       <CustomCursor />
 
-      {/* Top Glassmorphic Navigation Bar */}
-      <Navbar />
-
-      {/* Main Content Sections */}
+      {/* Main Content Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetails />} />
       </Routes>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

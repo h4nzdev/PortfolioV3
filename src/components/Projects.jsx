@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { featuredProjects } from '../data/portfolioData';
-import { ExternalLink, Layers, Briefcase, Clock, Users, CheckCircle2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ExternalLink, Layers, Briefcase, Clock, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GithubIcon as Github } from './SocialIcons';
 import { Icon } from '@iconify/react';
 import CardSwap, { Card } from './CardSwap';
@@ -44,7 +44,7 @@ const getTechIcon = (tech) => {
   return map[tech] || "logos:javascript";
 };
 
-const BentoCard = ({ project, index }) => {
+export const BentoCard = ({ project, index }) => {
   const cardRef = useRef(null);
   const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(0);

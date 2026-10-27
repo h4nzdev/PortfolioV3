@@ -1,5 +1,3 @@
-import { personalInfo } from '../data/portfolioData';
-
 const About = () => {
   return (
     <section id="about" className="pt-28 pb-20 relative w-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">

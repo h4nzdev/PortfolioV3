@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, MessageSquare, Terminal, Copy } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, Terminal, Copy } from 'lucide-react';
 import { GithubIcon as Github, LinkedinIcon as Linkedin } from './SocialIcons';
 import { personalInfo } from '../data/portfolioData';
 

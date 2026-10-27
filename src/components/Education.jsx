@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { educationTimeline, certifications } from '../data/portfolioData';
 import { GraduationCap, Award, BookOpen, ChevronDown, ChevronUp, Sparkles, CheckCircle2, ShieldCheck, Calendar, Building2, Terminal } from 'lucide-react';
 
