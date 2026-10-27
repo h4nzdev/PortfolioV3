@@ -72,16 +72,13 @@ export default function Home() {
       <SplashScreen />
 
       {/* 0. Top Fixed Header Navigation */}
-      <div className="rv">
-        <HeaderNavbar activeSection={activeSection} onNavigate={handleNavigate} />
-      </div>
+      <HeaderNavbar activeSection={activeSection} onNavigate={handleNavigate} />
 
       {/* 1. Editorial Mosaic Hero (Inspired by Reference Layout with Mockup Photos) */}
       <div className="rv">
         <EditorialMosaicHero
           onExploreWork={() => handleNavigate('projects')}
           onAboutMe={() => handleNavigate('about')}
-          onOpenProjectModal={(projId) => setSelectedProjectId(projId)}
         />
       </div>
 

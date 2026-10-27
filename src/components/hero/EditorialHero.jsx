@@ -119,7 +119,7 @@ export default function EditorialHero({ scrollProgress, onExploreWork, onAboutMe
           </div>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#A99A7D]" />
-            <span>12+ PRODUCTION PROJECTS</span>
+            <span>6 PRODUCTION PROJECTS</span>
           </div>
         </div>
 

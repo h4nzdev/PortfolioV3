@@ -64,6 +64,9 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
     setIsOut(false);
     setVisible(true);
     splash.style.display = 'grid';
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
 
     // Reset all elements
     parts.forEach((p) => {
@@ -75,89 +78,61 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
 
     word.style.transition = 'none';
     word.style.opacity = 0;
-    word.style.transform = 'none';
-    word.style.letterSpacing = '.5em';
+    word.style.transform = 'scale(1)';
 
     logo.style.opacity = 0;
     setTagOpacity(0);
     setTagText('');
 
-    await new Promise((r) => setTimeout(r, 60));
+    await new Promise((r) => setTimeout(r, 40));
     if (isCancelled()) return;
 
     logo.style.opacity = 1;
-    word.style.transition = 'opacity .9s ease .3s';
-    word.style.opacity = 0.9;
+    word.style.transition = 'opacity 0.4s ease';
+    word.style.opacity = 0.95;
 
-    await new Promise((r) => setTimeout(r, 900)); // logo appears whole
+    await new Promise((r) => setTimeout(r, 400)); // logo appears whole
     if (isCancelled()) return;
 
-    // 1 · DISASSEMBLE
-    parts.forEach((p, i) => setEl(p.el, p.spread, 1100, 'cubic-bezier(.65,0,.2,1)', i * 70));
-    await new Promise((r) => setTimeout(r, 1100 + 5 * 70 + 250));
+    // 1 · DISASSEMBLE (Fluid outward spread)
+    parts.forEach((p, i) => setEl(p.el, p.spread, 850, 'cubic-bezier(.65,0,.2,1)', i * 40));
+    await new Promise((r) => setTimeout(r, 850 + 5 * 40 + 60));
     if (isCancelled()) return;
 
-    // 2 · SHOW COMPONENTS (one at a time)
-    for (let i = 0; i < parts.length; i++) {
-      if (isCancelled()) return;
-      setTagText(`0${i + 1} / 06 — ${parts[i].name}`);
-      setTagOpacity(0.8);
-
-      parts.forEach((p, j) => {
-        const on = i === j;
-        setEl(
-          p.el,
-          on ? p.spread.replace(/scale\(([\d.]+)\)/, (_, s) => `scale(${parseFloat(s) * 1.22})`) : p.spread,
-          380,
-          'cubic-bezier(.3,.8,.3,1)',
-          0,
-          on ? 1 : 0.18
-        );
-      });
-      await new Promise((r) => setTimeout(r, 520));
-    }
-    if (isCancelled()) return;
-
-    setTagOpacity(0);
-    parts.forEach((p) => setEl(p.el, p.spread, 250, 'ease', 0, 1));
-    await new Promise((r) => setTimeout(r, 350));
-    if (isCancelled()) return;
-
-    // 3 · ASSEMBLE
-    parts.forEach((p, i) => setEl(p.el, T(), 1000, 'cubic-bezier(.5,0,.15,1.15)', i * 50));
-    await new Promise((r) => setTimeout(r, 1000 + 5 * 50 + 350));
+    // 2 · ASSEMBLE (Magnetic reassembly snapping crisply back)
+    parts.forEach((p, i) => setEl(p.el, T(), 800, 'cubic-bezier(.5,0,.15,1.15)', i * 35));
+    await new Promise((r) => setTimeout(r, 800 + 5 * 35 + 80));
     if (isCancelled()) return;
 
     // Anticipation squeeze
-    parts.forEach((p) => setEl(p.el, T(0, 0, 0, 0.94), 220, 'ease-in'));
-    await new Promise((r) => setTimeout(r, 240));
+    parts.forEach((p) => setEl(p.el, T(0, 0, 0, 0.94), 160, 'ease-in'));
+    await new Promise((r) => setTimeout(r, 180));
     if (isCancelled()) return;
 
-    // 4 · EXPLODE + REVEAL
+    // 3 · EXPLODE + CINEMATIC FADE REVEAL
     setIsOut(true);
-    word.style.transition = 'opacity .6s ease, letter-spacing 1.1s cubic-bezier(.7,0,.9,.5), transform 1.1s cubic-bezier(.7,0,.9,.5)';
+    if (site) site.classList.add('in');
+    if (onRevealSite) onRevealSite();
+
+    word.style.transition = 'opacity 0.6s ease, transform 0.9s cubic-bezier(.7,0,.9,.5)';
     word.style.opacity = 0;
-    word.style.letterSpacing = '1.4em';
-    word.style.transform = 'scale(1.6)';
+    word.style.transform = 'scale(1.5)';
 
     parts.forEach((p) => {
       if (!p.el) return;
-      p.el.style.transition = 'transform 1100ms cubic-bezier(.7,0,.9,.5), opacity 500ms ease 450ms';
+      p.el.style.transition = 'transform 900ms cubic-bezier(.7,0,.9,.5), opacity 600ms ease 250ms';
       p.el.style.transform = p.burst;
       p.el.style.opacity = 0;
     });
 
-    await new Promise((r) => setTimeout(r, 450));
-    if (isCancelled()) return;
-
-    if (site) site.classList.add('in');
-    if (onRevealSite) onRevealSite();
-
-    await new Promise((r) => setTimeout(r, 1100));
+    await new Promise((r) => setTimeout(r, 900));
     if (isCancelled()) return;
 
     if (splashRef.current) splashRef.current.style.display = 'none';
     setVisible(false);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
     if (onComplete) onComplete();
   }, [getParts, onRevealSite, onComplete]);
 
@@ -171,27 +146,28 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
 
     setIsOut(true);
     setTagOpacity(0);
+    if (site) site.classList.add('in');
+    if (onRevealSite) onRevealSite();
 
     if (word) {
-      word.style.transition = 'opacity .4s ease, letter-spacing .6s ease, transform .6s ease';
+      word.style.transition = 'opacity 0.4s ease, transform 0.6s ease';
       word.style.opacity = 0;
-      word.style.letterSpacing = '1.4em';
-      word.style.transform = 'scale(1.6)';
+      word.style.transform = 'scale(1.5)';
     }
 
     parts.forEach((p) => {
       if (!p.el) return;
-      p.el.style.transition = 'transform 600ms cubic-bezier(.7,0,.9,.5), opacity 300ms ease';
+      p.el.style.transition = 'transform 600ms cubic-bezier(.7,0,.9,.5), opacity 450ms ease';
       p.el.style.transform = p.burst;
       p.el.style.opacity = 0;
     });
 
-    if (site) site.classList.add('in');
-    if (onRevealSite) onRevealSite();
-
     setTimeout(() => {
       if (splash) splash.style.display = 'none';
       setVisible(false);
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+      }
       if (onComplete) onComplete();
     }, 600);
   }, [getParts, onRevealSite, onComplete]);

@@ -71,21 +71,18 @@ const col3Cards = [...col3, ...col3];
 const col4Cards = [...col4, ...col4];
 const col5Cards = [...col5, ...col5];
 
-export default function EditorialMosaicHero({ onExploreWork, onAboutMe, onOpenProjectModal }) {
+export default function EditorialMosaicHero({ onExploreWork, onAboutMe }) {
 
   const renderCard = (proj, idx, colPrefix) => (
     <div
       key={`${colPrefix}-${proj.id}-${idx}`}
-      onClick={() => {
-        sound.playClick();
-        if (onOpenProjectModal) onOpenProjectModal(proj.id);
-      }}
-      className="group relative w-full h-[220px] sm:h-[280px] lg:h-[340px] aspect-[3/4] shrink-0 rounded-2xl overflow-hidden bg-[#292824] border border-[#C8B99A]/20 cursor-pointer shadow-xl transition-all duration-500 hover:border-[#C8B99A]/60"
+      className="relative w-full h-[220px] sm:h-[280px] lg:h-[340px] aspect-[3/4] shrink-0 rounded-2xl overflow-hidden bg-[#292824] border border-[#C8B99A]/15 shadow-xl select-none pointer-events-none"
     >
       <img
         src={proj.img}
-        alt={proj.title}
-        className="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-75 group-hover:scale-105 group-hover:brightness-95 group-hover:grayscale-0 transition-all duration-700"
+        alt=""
+        loading="lazy"
+        className="w-full h-full object-cover object-top filter grayscale contrast-125 brightness-75 select-none"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#171715]/90 via-[#171715]/25 to-transparent" />
       <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] font-mono text-[#C8B99A]">
@@ -104,8 +101,8 @@ export default function EditorialMosaicHero({ onExploreWork, onAboutMe, onOpenPr
       id="hero"
       className="relative w-full min-h-screen bg-[#171715] text-[#F8F7F2] overflow-hidden flex flex-col justify-between pt-24 sm:pt-28 pb-8 px-4 sm:px-6 lg:px-8 selection:bg-[#C8B99A] selection:text-[#171715]"
     >
-      {/* Background Vertical Animated Columns Moving in Opposite Directions */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden flex justify-between gap-3 sm:gap-4 lg:gap-5 px-2 sm:px-4 pointer-events-auto opacity-35 hover:opacity-50 transition-opacity duration-700 select-none">
+      {/* Background Vertical Animated Columns Moving in Opposite Directions (Display Only - No Interaction) */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden flex justify-between gap-3 sm:gap-4 lg:gap-5 px-2 sm:px-4 pointer-events-none opacity-35 select-none">
         
         {/* Column 1: Moves Downwards */}
         <div className="relative h-full flex-1 min-w-0 overflow-hidden flex flex-col">
@@ -182,7 +179,7 @@ export default function EditorialMosaicHero({ onExploreWork, onAboutMe, onOpenPr
           </h2>
 
           <p className="text-xs sm:text-sm text-[#E5DCCB]/85 leading-relaxed font-sans max-w-xl">
-            {personalInfo.bio} Leveraging my IT background at the University of Southern Philippines Foundation to bridge innovative technology with real-world solutions across scalable architectures, AI integrations, and high-performance applications.
+            Leveraging my IT background at the University of Southern Philippines Foundation to bridge innovative technology with real-world solutions. Passionate about building scalable software architectures, integrating AI, and developing high-performance, data-driven applications.
           </p>
 
           {/* Action CTAs */}

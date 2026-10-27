@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { Send, CheckCircle2, Copy, ArrowDown, Sparkles, Mail, FileText, ArrowUpRight } from 'lucide-react';
-import { GithubIcon as Github, LinkedinIcon as Linkedin } from '../SocialIcons';
+import { Send, CheckCircle2, Copy, ArrowDown, Sparkles, ArrowUpRight, BookOpen } from 'lucide-react';
 import { personalInfo } from '../../data/portfolioData';
 import { sound } from '../../utils/sound';
 import resumePdf from '../../assets/resume/Hanz_Resume.pdf';
@@ -112,8 +111,8 @@ function createTVCanvasTexture() {
 
   ctx.fillStyle = '#85847E';
   ctx.font = '16px "JetBrains Mono", monospace';
-  ctx.fillText('• Check the Bookshelf on the left for direct GitHub, LinkedIn, Email & Resume', 110, 605);
-  ctx.fillText('• Click anywhere or scroll below to open the complete 2D Contact Portal', 110, 640);
+  ctx.fillText('• Check the Bookshelf on the left for 4 Technical Blog Volumes & Research', 110, 605);
+  ctx.fillText('• Scroll down to explore all 5 scenes & the interactive Contact Portal', 110, 640);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.anisotropy = 8;
@@ -404,7 +403,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [copied, setCopied] = useState(false);
-  const [hoveredSocial, setHoveredSocial] = useState(null);
+  const [hoveredBlog, setHoveredBlog] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
   const [mousePixelPos, setMousePixelPos] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -452,9 +452,9 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     const initialHeight = container.clientHeight || window.innerHeight || 800;
     const camera = new THREE.PerspectiveCamera(38, initialWidth / initialHeight, 0.1, 100);
 
-    // Initial Camera position (Scene 1: Desktop Focus - zoomed out comfortably)
-    const initialCamPos = new THREE.Vector3(0, 2.18, 2.22);
-    const initialCamLook = new THREE.Vector3(0, 1.48, 0.16);
+    // Initial Camera position (Scene 1: Laptop Screen Close-Up Focus)
+    const initialCamPos = new THREE.Vector3(0, 1.78, 0.58);
+    const initialCamLook = new THREE.Vector3(0, 1.647, 0.104);
     camera.position.copy(initialCamPos);
     camera.lookAt(initialCamLook);
 
@@ -585,18 +585,19 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       shelfGroup.add(plank);
     });
 
-    const interactiveSocialMeshes = [];
+    const interactiveBlogMeshes = [];
 
-    const socialsList = [
+    const blogsList = [
       {
-        id: 'github',
-        name: 'GitHub Profile',
-        tag: 'OPEN SOURCE CODEBASE',
-        desc: 'Explore production codebases, AI experiments, repositories, and technical contributions.',
-        statusLabel: 'Handle',
-        statusValue: '@h4nzdev',
-        url: personalInfo.socials.github,
-        spineLabel: 'GITHUB',
+        id: 'blog-1',
+        title: 'Architecting Distributed Frontends',
+        subtitle: 'From monolithic React apps to micro-frontends & sub-100ms hydration.',
+        spineLabel: 'SYS ARCH',
+        category: 'SYSTEMS ARCHITECTURE',
+        readTime: '6 MIN READ',
+        date: 'OCTOBER 2026',
+        status: 'COMING SOON',
+        synopsis: 'A deep architectural dissection on decoupling large user interfaces, isolating module boundaries, and achieving sub-100ms client hydration.',
         color: '#171715',
         textColor: '#F8F7F2',
         x: -0.36,
@@ -606,14 +607,15 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         d: 0.3,
       },
       {
-        id: 'linkedin',
-        name: 'LinkedIn Network',
-        tag: 'VERIFIED CREDENTIAL',
-        desc: 'Connect for full-stack engineering roles, technical architecture, and professional inquiries.',
-        statusLabel: 'Network',
-        statusValue: 'Connect on LinkedIn',
-        url: personalInfo.socials.linkedin,
-        spineLabel: 'LINKEDIN',
+        id: 'blog-2',
+        title: 'Multi-Agent Autonomous Workflows',
+        subtitle: 'Orchestrating agentic loops, stateful tool-calling & LLM execution.',
+        spineLabel: 'AI AGENTS',
+        category: 'ARTIFICIAL INTELLIGENCE',
+        readTime: '8 MIN READ',
+        date: 'NOVEMBER 2026',
+        status: 'COMING SOON',
+        synopsis: 'Production-tested patterns for designing collaborative agent networks that plan, inspect context, run automated tests, and recover from failures.',
         color: '#292824',
         textColor: '#C8B99A',
         x: -0.21,
@@ -623,16 +625,17 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         d: 0.3,
       },
       {
-        id: 'email',
-        name: 'Direct Electronic Mail',
-        tag: 'DIRECT INQUIRY',
-        desc: 'Send proposals, project specifications, or collaboration requests directly to Hanz.',
-        statusLabel: 'Protocol',
-        statusValue: 'Send Email Message',
-        url: `mailto:${personalInfo.email}`,
-        spineLabel: 'EMAIL',
-        color: '#C8B99A',
-        textColor: '#171715',
+        id: 'blog-3',
+        title: 'Spatial Web & WebGL Performance',
+        subtitle: 'Optimizing Three.js draw calls, shader instancing & GPU memory.',
+        spineLabel: '3D GRAPHICS',
+        category: 'SPATIAL COMPUTING',
+        readTime: '5 MIN READ',
+        date: 'DECEMBER 2026',
+        status: 'COMING SOON',
+        synopsis: 'Benchmarking techniques for rendering high-fidelity architectural 3D environments at locked 60 FPS across low-power and mobile browsers.',
+        color: '#383631',
+        textColor: '#F8F7F2',
         x: -0.06,
         y: 1.61,
         w: 0.12,
@@ -640,15 +643,16 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         d: 0.3,
       },
       {
-        id: 'resume',
-        name: 'Curriculum Vitae',
-        tag: 'VERIFIED CREDENTIAL',
-        desc: "Verified academic Dean's list records, software engineering stack, and full background.",
-        statusLabel: 'Format',
-        statusValue: 'PDF Document (New Tab)',
-        url: resumePdf,
-        spineLabel: 'RESUME',
-        color: '#F8F7F2',
+        id: 'blog-4',
+        title: 'The 1.27 GPA Engineering Blueprint',
+        subtitle: 'Translating academic rigor and CS foundational theory into production code.',
+        spineLabel: 'DISCIPLINE',
+        category: 'ENGINEERING CRAFT',
+        readTime: '4 MIN READ',
+        date: 'JANUARY 2027',
+        status: 'COMING SOON',
+        synopsis: 'How maintaining Dean’s List academic discipline shapes systems thinking, rigorous documentation integrity, and dependable software delivery.',
+        color: '#C8B99A',
         textColor: '#171715',
         x: 0.1,
         y: 1.64,
@@ -658,34 +662,35 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       },
     ];
 
-    socialsList.forEach((soc) => {
-      const spineTex = createSpineTexture(soc.spineLabel, soc.color, soc.textColor);
+    blogsList.forEach((blog) => {
+      const spineTex = createSpineTexture(blog.spineLabel, blog.color, blog.textColor);
 
       const bookMaterials = [
-        new THREE.MeshStandardMaterial({ color: soc.color, roughness: 0.4 }),
-        new THREE.MeshStandardMaterial({ color: soc.color, roughness: 0.4 }),
+        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
+        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
         new THREE.MeshStandardMaterial({ color: 0xF5F0E6, roughness: 0.6 }),
         new THREE.MeshStandardMaterial({ color: 0xF5F0E6, roughness: 0.6 }),
         new THREE.MeshStandardMaterial({ map: spineTex, roughness: 0.3 }),
-        new THREE.MeshStandardMaterial({ color: soc.color, roughness: 0.4 }),
+        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
       ];
 
-      const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(soc.w, soc.h, soc.d), bookMaterials);
-      bookMesh.position.set(soc.x, soc.y, 0);
+      const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(blog.w, blog.h, blog.d), bookMaterials);
+      bookMesh.position.set(blog.x, blog.y, 0);
       bookMesh.castShadow = true;
       bookMesh.userData = {
-        isSocial: true,
-        id: soc.id,
-        name: soc.name,
-        tag: soc.tag,
-        desc: soc.desc,
-        statusLabel: soc.statusLabel,
-        statusValue: soc.statusValue,
-        url: soc.url,
+        isBlog: true,
+        id: blog.id,
+        title: blog.title,
+        subtitle: blog.subtitle,
+        category: blog.category,
+        readTime: blog.readTime,
+        date: blog.date,
+        status: blog.status,
+        synopsis: blog.synopsis,
       };
 
       shelfGroup.add(bookMesh);
-      interactiveSocialMeshes.push(bookMesh);
+      interactiveBlogMeshes.push(bookMesh);
     });
 
     const bookEnd = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.35, 0.28), charcoal);
@@ -893,7 +898,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
 
     scene.add(tableGroup);
 
-    // 10. Raycasting & Mouse Interaction for Bookshelf Socials
+    // 10. Raycasting & Mouse Interaction for Bookshelf Blog Volumes
     const raycaster = new THREE.Raycaster();
     const mouseCoord = new THREE.Vector2();
 
@@ -909,27 +914,28 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       mouseCoord.y = y;
 
       raycaster.setFromCamera(mouseCoord, camera);
-      const intersects = raycaster.intersectObjects(interactiveSocialMeshes);
+      const intersects = raycaster.intersectObjects(interactiveBlogMeshes);
 
       if (intersects.length > 0) {
         const hit = intersects[0].object;
         canvas.style.cursor = 'pointer';
-        setHoveredSocial(hit.userData);
+        setHoveredBlog(hit.userData);
       } else {
         canvas.style.cursor = 'grab';
-        setHoveredSocial(null);
+        setHoveredBlog(null);
       }
     };
 
     const onPointerDown = () => {
       raycaster.setFromCamera(mouseCoord, camera);
-      const intersects = raycaster.intersectObjects(interactiveSocialMeshes);
+      const intersects = raycaster.intersectObjects(interactiveBlogMeshes);
 
       if (intersects.length > 0) {
         sound.playClick();
         const hit = intersects[0].object;
-        if (hit.userData.url) {
-          window.open(hit.userData.url, '_blank', 'noopener,noreferrer');
+        if (hit.userData.isBlog) {
+          setToastMessage(`"${hit.userData.title}" is coming soon. Stay tuned!`);
+          setTimeout(() => setToastMessage(null), 3200);
         }
       }
     };
@@ -937,18 +943,26 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     container.addEventListener('pointermove', onPointerMove);
     container.addEventListener('pointerdown', onPointerDown);
 
-    // 11. Multi-Stage Scroll Choreography Keyframes
-    // Scene 1: Focus on the desktop (meeting table, laptop with code, notes, cups) - Zoomed out comfortably
-    const scene1Cam = new THREE.Vector3(0, 2.18, 2.22);
-    const scene1Look = new THREE.Vector3(0, 1.48, 0.16);
+    // 11. Multi-Stage Scroll Choreography Keyframes (5 Distinct Perspectives)
+    // Scene 1: Macro Focus on the Laptop Screen (Live Codebase & Personal Info)
+    const scene1Cam = new THREE.Vector3(0, 1.78, 0.58);
+    const scene1Look = new THREE.Vector3(0, 1.647, 0.104);
 
-    // Scene 2: Zoom in to the socials (bookshelf face-to-face)
-    const scene2Cam = new THREE.Vector3(-2.15, 2.05, 0.7);
-    const scene2Look = new THREE.Vector3(-2.78, 1.92, -0.75);
+    // Scene 2: Zoom-out to the Desktop Workspace (Meeting Table, Coffee, Notebook)
+    const scene2Cam = new THREE.Vector3(0, 2.18, 2.22);
+    const scene2Look = new THREE.Vector3(0, 1.48, 0.16);
 
-    // Scene 3: Zoom out showing the whole studio environment
-    const scene3Cam = new THREE.Vector3(0, 3.8, 7.8);
-    const scene3Look = new THREE.Vector3(0, 1.45, 0.2);
+    // Scene 3: Wall TV Display Showcase (Studio OLED Presentation Screen)
+    const scene3Cam = new THREE.Vector3(0, 2.45, 0.95);
+    const scene3Look = new THREE.Vector3(0, 2.45, -2.48);
+
+    // Scene 4: Architectural Blog Archive (Bookshelf Face-to-Face with 4 Volumes)
+    const scene4Cam = new THREE.Vector3(-2.15, 2.05, 0.70);
+    const scene4Look = new THREE.Vector3(-2.78, 1.92, -0.75);
+
+    // Scene 5: Full Studio Environment (Grand Wide-Angle Zoom-Out & Contact Portal)
+    const scene5Cam = new THREE.Vector3(0, 3.8, 7.8);
+    const scene5Look = new THREE.Vector3(0, 1.45, 0.2);
 
     const currentLookAt = scene1Look.clone();
 
@@ -976,16 +990,26 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       const targetCam = new THREE.Vector3();
       const targetLook = new THREE.Vector3();
 
-      if (p < 0.45) {
-        // Scene 1 -> Scene 2 (Desktop -> Bookshelf Socials)
-        const t = smoothstep(0.06, 0.38, p);
+      if (p < 0.22) {
+        // Scene 1 (Screen Close-Up) -> Scene 2 (Desktop Workspace)
+        const t = smoothstep(0.04, 0.19, p);
         targetCam.lerpVectors(scene1Cam, scene2Cam, t);
         targetLook.lerpVectors(scene1Look, scene2Look, t);
-      } else {
-        // Scene 2 -> Scene 3 (Socials -> Whole Environment Zoom-Out)
-        const t = smoothstep(0.45, 0.82, p);
+      } else if (p < 0.48) {
+        // Scene 2 (Desktop Workspace) -> Scene 3 (Wall TV Display)
+        const t = smoothstep(0.24, 0.44, p);
         targetCam.lerpVectors(scene2Cam, scene3Cam, t);
         targetLook.lerpVectors(scene2Look, scene3Look, t);
+      } else if (p < 0.74) {
+        // Scene 3 (Wall TV Display) -> Scene 4 (Bookshelf Blog Archive)
+        const t = smoothstep(0.50, 0.70, p);
+        targetCam.lerpVectors(scene3Cam, scene4Cam, t);
+        targetLook.lerpVectors(scene3Look, scene4Look, t);
+      } else {
+        // Scene 4 (Bookshelf Blog Archive) -> Scene 5 (Full Studio Environment Zoom-Out)
+        const t = smoothstep(0.76, 0.94, p);
+        targetCam.lerpVectors(scene4Cam, scene5Cam, t);
+        targetLook.lerpVectors(scene4Look, scene5Look, t);
       }
 
       // Subtle atmospheric breathing movement
@@ -1083,7 +1107,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     <section
       ref={sectionRef}
       id="contact-3d"
-      className="relative w-full h-[320vh] bg-[#F5F3EC]"
+      className="relative w-full h-[480vh] bg-[#F5F3EC]"
     >
       {/* Sticky 100vh Fullscreen Pinned Viewport */}
       <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-between selection:bg-[#C8B99A] selection:text-[#171715]">
@@ -1099,6 +1123,14 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
 
         <div className="absolute inset-0 pointer-events-none bg-noise opacity-25" />
 
+        {/* Toast Notification when clicking a Coming Soon Blog */}
+        {toastMessage && (
+          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-[#171715]/95 text-[#F8F7F2] border border-[#C8B99A]/60 shadow-2xl backdrop-blur-xl text-xs font-mono flex items-center gap-2 animate-fadeIn">
+            <Sparkles size={14} className="text-[#C8B99A]" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
         {/* Minimal HUD: Stage Status & Step Indicators */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pointer-events-none flex items-center justify-between">
           
@@ -1106,11 +1138,15 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#C8B99A]/60 shadow-md">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#171715]">
-              {scrollProgress < 0.4
-                ? 'Scene 1 / 3 • Desktop Focus'
-                : scrollProgress < 0.75
-                ? 'Scene 2 / 3 • Socials Bookshelf'
-                : 'Scene 3 / 3 • Full Studio Environment'}
+              {scrollProgress < 0.22
+                ? 'Scene 1 / 5 • Codebase Screen Focus'
+                : scrollProgress < 0.48
+                ? 'Scene 2 / 5 • Desktop Workspace'
+                : scrollProgress < 0.74
+                ? 'Scene 3 / 5 • Studio TV Display'
+                : scrollProgress < 0.88
+                ? 'Scene 4 / 5 • Blog Archive (Coming Soon)'
+                : 'Scene 5 / 5 • Full Studio Environment'}
             </span>
           </div>
 
@@ -1118,9 +1154,13 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#C8B99A]/50 text-xs font-mono text-[#85847E]">
               <span>
-                {scrollProgress < 0.4
-                  ? 'Scroll to inspect socials'
-                  : scrollProgress < 0.75
+                {scrollProgress < 0.22
+                  ? 'Scroll to inspect desktop workspace'
+                  : scrollProgress < 0.48
+                  ? 'Scroll to view studio TV display'
+                  : scrollProgress < 0.74
+                  ? 'Scroll to inspect blog bookshelf'
+                  : scrollProgress < 0.88
                   ? 'Scroll to reveal full studio'
                   : 'Scroll down for contact form'}
               </span>
@@ -1128,44 +1168,59 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
             </div>
 
             <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full border border-[#C8B99A]/50 shadow-xs">
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${scrollProgress < 0.4 ? 'bg-[#171715] scale-125' : 'bg-[#C8B99A]/60'}`} />
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${scrollProgress >= 0.4 && scrollProgress < 0.75 ? 'bg-[#171715] scale-125' : 'bg-[#C8B99A]/60'}`} />
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${scrollProgress >= 0.75 ? 'bg-[#171715] scale-125' : 'bg-[#C8B99A]/60'}`} />
+              {[0, 1, 2, 3, 4].map((idx) => {
+                const isActive =
+                  (idx === 0 && scrollProgress < 0.22) ||
+                  (idx === 1 && scrollProgress >= 0.22 && scrollProgress < 0.48) ||
+                  (idx === 2 && scrollProgress >= 0.48 && scrollProgress < 0.74) ||
+                  (idx === 3 && scrollProgress >= 0.74 && scrollProgress < 0.88) ||
+                  (idx === 4 && scrollProgress >= 0.88);
+                return (
+                  <span
+                    key={idx}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      isActive ? 'bg-[#171715] scale-125' : 'bg-[#C8B99A]/60'
+                    }`}
+                  />
+                );
+              })}
             </div>
           </div>
 
         </div>
 
-        {/* Floating Hover Modal for Bookshelf Socials */}
-        {hoveredSocial && (
+        {/* Floating Hover Modal for Bookshelf Blogs */}
+        {hoveredBlog && (
           <div
             className="pointer-events-none hidden sm:block absolute z-30 transition-all duration-75 ease-out"
             style={{
-              left: `${Math.min(window.innerWidth - 320, Math.max(16, mousePixelPos.x + 24))}px`,
-              top: `${Math.max(16, Math.min(window.innerHeight - 200, mousePixelPos.y - 70))}px`,
+              left: `${Math.min(window.innerWidth - 340, Math.max(16, mousePixelPos.x + 24))}px`,
+              top: `${Math.max(16, Math.min(window.innerHeight - 240, mousePixelPos.y - 80))}px`,
             }}
           >
-            <div className="w-72 p-4 rounded-2xl bg-[#292824]/95 border border-[#C8B99A]/60 shadow-2xl backdrop-blur-xl text-left space-y-2 transform rotate-1 animate-fadeIn">
+            <div className="w-80 p-5 rounded-2xl bg-[#1F1E1B]/95 border border-[#C8B99A]/60 shadow-2xl backdrop-blur-xl text-left space-y-2.5 transform rotate-1 animate-fadeIn">
               <div className="flex items-center justify-between text-[10px] font-mono uppercase text-[#C8B99A]">
-                <span>{hoveredSocial.tag}</span>
-                {hoveredSocial.id === 'github' && <Github className="w-3.5 h-3.5 text-[#C8B99A]" />}
-                {hoveredSocial.id === 'linkedin' && <Linkedin className="w-3.5 h-3.5 text-[#C8B99A]" />}
-                {hoveredSocial.id === 'email' && <Mail size={13} className="text-[#C8B99A]" />}
-                {hoveredSocial.id === 'resume' && <FileText size={13} className="text-[#C8B99A]" />}
+                <span className="flex items-center gap-1.5">
+                  <BookOpen size={12} className="text-[#C8B99A]" />
+                  <span>{hoveredBlog.category}</span>
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+                  {hoveredBlog.status}
+                </span>
               </div>
 
-              <div className="text-sm sm:text-base font-bold font-['Space_Grotesk'] text-[#F8F7F2] leading-snug">
-                {hoveredSocial.name}
+              <div className="text-base font-bold font-['Space_Grotesk'] text-[#F8F7F2] leading-snug">
+                {hoveredBlog.title}
               </div>
 
               <p className="text-xs text-[#E5DCCB]/85 font-sans leading-relaxed">
-                {hoveredSocial.desc}
+                {hoveredBlog.synopsis}
               </p>
 
               <div className="pt-2 border-t border-[#C8B99A]/20 flex items-center justify-between text-[10px] font-mono text-[#85847E]">
-                <span>{hoveredSocial.statusLabel}</span>
+                <span>{hoveredBlog.date}</span>
                 <span className="text-[#C8B99A] font-semibold flex items-center gap-1">
-                  <span>{hoveredSocial.statusValue}</span>
+                  <span>{hoveredBlog.readTime}</span>
                   <ArrowUpRight size={11} />
                 </span>
               </div>
@@ -1173,8 +1228,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
           </div>
         )}
 
-        {/* Scene 3 Overlay: Catchy Text Line + Whole Environment Call-to-Action */}
-        {scrollProgress >= 0.72 && (
+        {/* Scene 5 Overlay: Catchy Text Line + Whole Environment Call-to-Action */}
+        {scrollProgress >= 0.88 && (
           <div className="relative z-20 max-w-4xl mx-auto w-full px-4 sm:px-6 pb-12 sm:pb-16 text-center animate-fadeIn pointer-events-none">
             <div className="p-6 sm:p-8 rounded-3xl bg-white/92 backdrop-blur-xl border border-[#C8B99A]/60 shadow-2xl space-y-4 pointer-events-auto">
               
@@ -1218,12 +1273,16 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
           </div>
         )}
 
-        {/* Fallback bottom navigation bar for Scene 1 & Scene 2 */}
-        {scrollProgress < 0.72 && (
+        {/* Fallback bottom navigation bar for Scenes 1 through 4 */}
+        {scrollProgress < 0.88 && (
           <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 pointer-events-auto flex items-center justify-between text-xs font-mono text-[#85847E]">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8B99A]" />
-              <span className="hidden sm:inline">Use mouse scroll to travel between 3D scenes</span>
+              <span className="hidden sm:inline">
+                {scrollProgress >= 0.74 && scrollProgress < 0.88
+                  ? 'Hover or click books on the shelf to preview upcoming blog articles'
+                  : 'Use mouse scroll to travel between 5 architectural scenes'}
+              </span>
             </div>
 
             <div className="flex items-center gap-2">

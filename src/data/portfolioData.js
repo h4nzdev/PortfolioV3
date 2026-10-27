@@ -75,7 +75,7 @@ export const personalInfo = {
   location: "Cebu City, Philippines",
   email: "hanzhmagbal@gmail.com",
   phone: "09927870100",
-  bio: "Leveraging my IT background to bridge innovative technology with real-world solutions. Driven by a passion for creating scalable, impactful software architectures and data-driven systems.",
+  bio: "Leveraging my IT background at the University of Southern Philippines Foundation to bridge innovative technology with real-world solutions. Passionate about building scalable software architectures, integrating AI, and developing high-performance, data-driven applications.",
   longBio:
     "As a senior Information Technology student at the University of Southern Philippines Foundation, I have cultivated a deep expertise in modern software engineering, artificial intelligence integration, and cloud-native architectures. My academic and project journey focuses on developing high-performance, scalable systems that translate complex data into actionable real-world insights.",
   socials: {
@@ -86,7 +86,7 @@ export const personalInfo = {
   },
   stats: [
     { label: "Year in BSIT", value: "4th" },
-    { label: "Core Projects", value: "12+" },
+    { label: "Core Projects", value: "6" },
     { label: "Technologies", value: "15+" },
     { label: "GPA / Standing", value: "Dean's List" },
   ],
