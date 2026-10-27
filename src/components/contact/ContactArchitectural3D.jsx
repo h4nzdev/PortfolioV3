@@ -122,39 +122,62 @@ function createTVCanvasTexture() {
 }
 
 // Helper to generate custom book spine texture for interactive socials
-function createSpineTexture(label, brandColor = '#171715', textColor = '#F8F7F2') {
+function createSpineTexture(label, brandColor = '#171715', textColor = '#F8F7F2', volLabel = 'VOL. 01') {
   const canvas = document.createElement('canvas');
   canvas.width = 128;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
+  const isLight = brandColor === '#C8B99A' || brandColor === '#E5DCCB' || brandColor === '#F8F7F2';
+  const accentColor = isLight ? '#171715' : '#C8B99A';
+  const borderColor = isLight ? 'rgba(23, 23, 21, 0.45)' : 'rgba(200, 185, 154, 0.45)';
+  const innerBorderColor = isLight ? 'rgba(23, 23, 21, 0.2)' : 'rgba(200, 185, 154, 0.2)';
+
+  // 1. Spine background
   ctx.fillStyle = brandColor;
   ctx.fillRect(0, 0, 128, 512);
 
-  // Outer border
-  ctx.strokeStyle = 'rgba(200, 185, 154, 0.4)';
+  // 2. Outer architectural foil border
+  ctx.strokeStyle = borderColor;
   ctx.lineWidth = 4;
   ctx.strokeRect(6, 6, 116, 500);
 
-  // Top emblem
-  ctx.fillStyle = '#C8B99A';
-  ctx.fillRect(20, 30, 88, 6);
+  // 3. Inner fine hairline frame
+  ctx.strokeStyle = innerBorderColor;
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(12, 12, 104, 488);
 
-  // Rotated vertical title
+  // 4. Top emblem header
+  ctx.fillStyle = accentColor;
+  ctx.fillRect(24, 28, 80, 5);
+  ctx.fillRect(40, 37, 48, 2);
+
+  // 5. Volume edition label
+  ctx.fillStyle = accentColor;
+  ctx.font = 'bold 11px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(volLabel, 64, 58);
+
+  // 6. Rotated vertical title
   ctx.save();
-  ctx.translate(64, 300);
+  ctx.translate(64, 285);
   ctx.rotate(-Math.PI / 2);
   ctx.fillStyle = textColor;
-  ctx.font = 'bold 28px "JetBrains Mono", monospace';
+  ctx.font = 'bold 26px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(label, 0, 10);
+  ctx.fillText(label, 0, 9);
   ctx.restore();
 
-  // Bottom emblem
-  ctx.fillStyle = '#C8B99A';
-  ctx.fillRect(20, 470, 88, 6);
+  // 7. Bottom emblem footer
+  ctx.fillStyle = accentColor;
+  ctx.fillRect(40, 465, 48, 2);
+  ctx.fillRect(24, 474, 80, 5);
 
   const texture = new THREE.CanvasTexture(canvas);
+  texture.anisotropy = 16;
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   return texture;
 }
 
@@ -492,7 +515,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 1024;
     sunLight.shadow.mapSize.height = 1024;
-    sunLight.shadow.bias = -0.0005;
+    sunLight.shadow.bias = -0.0001;
+    sunLight.shadow.normalBias = 0.02;
     scene.add(sunLight);
 
     // 3. Terrace Floor
@@ -563,37 +587,61 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
 
     scene.add(tvGroup);
 
-    // 6. ARCHITECTURAL BOOKSHELF (SOCIALS ARSENAL)
+    // 6. ARCHITECTURAL BOOKSHELF (EDITORIAL ARCHIVE)
     const shelfGroup = new THREE.Group();
     shelfGroup.position.set(-2.8, 0.3, -0.8);
     shelfGroup.rotation.y = Math.PI * 0.12;
 
-    const shelfW = 1.25;
-    const shelfH = 2.4;
+    // Shelf Dimensions: Uprights frame the planks without coplanar penetration
+    const shelfW = 1.30;
+    const shelfH = 2.45;
     const shelfD = 0.42;
+    const uprightW = 0.04;
+    const plankW = shelfW - uprightW * 2 - 0.008; // 1.212m, recessed neatly inside uprights
+    const plankH = 0.036;
+    const plankD = 0.38; // Recessed by 20mm from both front and back upright faces to prevent Z-fighting
 
-    [-shelfW / 2, shelfW / 2].forEach((xPos) => {
-      const upright = new THREE.Mesh(new THREE.BoxGeometry(0.05, shelfH, shelfD), charcoal);
+    // Left and right structural vertical uprights
+    const uprightGeo = new THREE.BoxGeometry(uprightW, shelfH, shelfD);
+    [-shelfW / 2 + uprightW / 2, shelfW / 2 - uprightW / 2].forEach((xPos) => {
+      const upright = new THREE.Mesh(uprightGeo, charcoal);
       upright.position.set(xPos, shelfH / 2, 0);
       upright.castShadow = true;
+      upright.receiveShadow = true;
       shelfGroup.add(upright);
     });
 
-    const shelfLevels = [0.05, 0.7, 1.35, 2.0, 2.38];
+    // Horizontal Shelving Planks (With zero coplanar face overlap)
+    const plankGeo = new THREE.BoxGeometry(plankW, plankH, plankD);
+    const shelfLevels = [0.06, 0.72, 1.38, 2.00, 2.40];
     shelfLevels.forEach((yPos) => {
-      const plank = new THREE.Mesh(new THREE.BoxGeometry(shelfW, 0.04, shelfD), khaki);
+      const plank = new THREE.Mesh(plankGeo, khaki);
       plank.position.set(0, yPos, 0);
       plank.castShadow = true;
+      plank.receiveShadow = true;
       shelfGroup.add(plank);
+
+      // Minimalist rear architectural stop-lip
+      const backRail = new THREE.Mesh(new THREE.BoxGeometry(plankW, 0.04, 0.012), charcoal);
+      backRail.position.set(0, yPos + 0.02 + plankH / 2, -plankD / 2 + 0.006);
+      shelfGroup.add(backRail);
     });
 
-    const interactiveBlogMeshes = [];
+    // Dedicated warm shelf spotlight for clear spine legibility & rich ambient tone
+    const shelfLight = new THREE.PointLight(0xFFF7EC, 0.75, 3.5);
+    shelfLight.position.set(0, 2.1, 0.45);
+    shelfGroup.add(shelfLight);
 
+    const interactiveBlogMeshes = [];
+    const spineTextures = [];
+
+    // Volumes Level is 1.38 (Plank top is 1.38 + 0.018 = 1.398).
+    // Resting base is 1.400 (2mm elevation eliminates any micro-flickering Z-fighting with plank top face)
     const spineConfigs = [
-      { spineLabel: 'ERP ARCH', color: '#171715', textColor: '#F8F7F2', x: -0.36, y: 1.62, w: 0.12, h: 0.5, d: 0.3 },
-      { spineLabel: 'EDGE AI', color: '#292824', textColor: '#C8B99A', x: -0.21, y: 1.63, w: 0.12, h: 0.52, d: 0.3 },
-      { spineLabel: 'DEVOPS', color: '#383631', textColor: '#F8F7F2', x: -0.06, y: 1.61, w: 0.12, h: 0.48, d: 0.3 },
-      { spineLabel: 'REACT 19', color: '#C8B99A', textColor: '#171715', x: 0.1, y: 1.64, w: 0.13, h: 0.54, d: 0.32 },
+      { spineLabel: 'ERP ARCH', volLabel: 'VOL. 01', color: '#171715', textColor: '#F8F7F2', x: -0.21, y: 1.650, w: 0.105, h: 0.50, d: 0.28 },
+      { spineLabel: 'EDGE AI', volLabel: 'VOL. 02', color: '#262522', textColor: '#C8B99A', x: -0.10, y: 1.660, w: 0.105, h: 0.52, d: 0.28 },
+      { spineLabel: 'DEVOPS', volLabel: 'VOL. 03', color: '#34322C', textColor: '#F8F7F2', x: 0.01, y: 1.640, w: 0.105, h: 0.48, d: 0.28 },
+      { spineLabel: 'REACT 19', volLabel: 'VOL. 04', color: '#C8B99A', textColor: '#171715', x: 0.12, y: 1.670, w: 0.105, h: 0.54, d: 0.28 },
     ];
 
     const blogsList = blogPosts.slice(0, 4).map((post, idx) => {
@@ -608,6 +656,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         status: 'READ DISPATCH',
         synopsis: post.excerpt,
         spineLabel: conf.spineLabel,
+        volLabel: conf.volLabel,
         color: conf.color,
         textColor: conf.textColor,
         x: conf.x,
@@ -619,20 +668,22 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     });
 
     blogsList.forEach((blog) => {
-      const spineTex = createSpineTexture(blog.spineLabel, blog.color, blog.textColor);
+      const spineTex = createSpineTexture(blog.spineLabel, blog.color, blog.textColor, blog.volLabel);
+      spineTextures.push(spineTex);
 
       const bookMaterials = [
-        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
-        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
-        new THREE.MeshStandardMaterial({ color: 0xF5F0E6, roughness: 0.6 }),
-        new THREE.MeshStandardMaterial({ color: 0xF5F0E6, roughness: 0.6 }),
+        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.35, metalness: 0.05 }),
+        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.35, metalness: 0.05 }),
+        new THREE.MeshStandardMaterial({ color: 0xF7F4EC, roughness: 0.7 }),
+        new THREE.MeshStandardMaterial({ color: 0xF7F4EC, roughness: 0.7 }),
         new THREE.MeshStandardMaterial({ map: spineTex, roughness: 0.3 }),
-        new THREE.MeshStandardMaterial({ color: blog.color, roughness: 0.4 }),
+        new THREE.MeshStandardMaterial({ color: 0xF7F4EC, roughness: 0.7 }),
       ];
 
       const bookMesh = new THREE.Mesh(new THREE.BoxGeometry(blog.w, blog.h, blog.d), bookMaterials);
-      bookMesh.position.set(blog.x, blog.y, 0);
+      bookMesh.position.set(blog.x, blog.y, 0.02);
       bookMesh.castShadow = true;
+      bookMesh.receiveShadow = true;
       bookMesh.userData = {
         isBlog: true,
         id: blog.id,
@@ -649,25 +700,53 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       interactiveBlogMeshes.push(bookMesh);
     });
 
-    const bookEnd = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.35, 0.28), charcoal);
-    bookEnd.position.set(0.3, 1.55, 0);
-    shelfGroup.add(bookEnd);
+    // Minimalist Heavy Metal L-BookEnd snugly bracing REACT 19 at x = 0.1725
+    const bookEndUpright = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.38, 0.22), charcoal);
+    bookEndUpright.position.set(0.185, 1.400 + 0.19, 0.02);
+    bookEndUpright.castShadow = true;
+    shelfGroup.add(bookEndUpright);
 
-    const colors = [0x292824, 0xC8B99A, 0xE5DCCB, 0x171715];
-    for (let b = 0; b < 6; b++) {
-      const bGeo = new THREE.BoxGeometry(0.07, 0.42 + Math.sin(b) * 0.05, 0.26);
-      const bMat = new THREE.MeshStandardMaterial({ color: colors[b % colors.length], roughness: 0.5 });
+    const bookEndBase = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.012, 0.22), charcoal);
+    bookEndBase.position.set(0.225, 1.400 + 0.006, 0.02);
+    bookEndBase.castShadow = true;
+    shelfGroup.add(bookEndBase);
+
+    // Shelf Level 2 (yPos = 0.72): Decorative technical manuals correctly resting on plank (top: 0.738)
+    const decorativeColors = [0x262522, 0xC8B99A, 0x383631, 0xE5DCCB, 0x141312, 0x8C7E6A];
+    for (let b = 0; b < 7; b++) {
+      const bH = 0.36 + Math.sin(b * 1.5) * 0.05;
+      const bW = 0.065;
+      const bD = 0.25;
+      const bGeo = new THREE.BoxGeometry(bW, bH, bD);
+      const bMat = new THREE.MeshStandardMaterial({
+        color: decorativeColors[b % decorativeColors.length],
+        roughness: 0.45,
+      });
       const bMesh = new THREE.Mesh(bGeo, bMat);
-      bMesh.position.set(-0.35 + b * 0.08, 0.94, 0);
+      // Center calculated dynamically so every base rests precisely at 0.740
+      bMesh.position.set(-0.35 + b * 0.072, 0.740 + bH / 2, 0.02);
+      bMesh.castShadow = true;
       shelfGroup.add(bMesh);
     }
 
+    // Shelf Level 4 (yPos = 2.00): Sculptural Travertine Sphere (top: 2.018)
+    const artObject = new THREE.Mesh(new THREE.SphereGeometry(0.085, 24, 24), sandBeige);
+    artObject.position.set(-0.15, 2.018 + 0.085, 0.02);
+    artObject.castShadow = true;
+    shelfGroup.add(artObject);
+
+    // Shelf Level 5 (yPos = 2.40): Top Ceramic Planter & Foliage (top: 2.418)
     const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.09, 0.16, 16), sandBeige);
-    pot.position.set(0, 2.46, 0);
+    pot.position.set(0, 2.418 + 0.08, 0.02);
+    pot.castShadow = true;
     shelfGroup.add(pot);
 
-    const plant = new THREE.Mesh(new THREE.DodecahedronGeometry(0.14, 1), new THREE.MeshStandardMaterial({ color: 0x485E3B, roughness: 0.8 }));
-    plant.position.set(0, 2.62, 0);
+    const plant = new THREE.Mesh(
+      new THREE.DodecahedronGeometry(0.14, 1),
+      new THREE.MeshStandardMaterial({ color: 0x485E3B, roughness: 0.8 })
+    );
+    plant.position.set(0, 2.418 + 0.16 + 0.09, 0.02);
+    plant.castShadow = true;
     shelfGroup.add(plant);
 
     scene.add(shelfGroup);
@@ -850,6 +929,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
     const tableLight = new THREE.PointLight(0xFDF4DC, 1.2, 4.2);
     tableLight.position.set(0, 2.65, 0.2);
     tableLight.castShadow = true;
+    tableLight.shadow.bias = -0.0001;
+    tableLight.shadow.normalBias = 0.02;
     scene.add(tableLight);
 
     scene.add(tableGroup);
@@ -1056,6 +1137,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       renderer.dispose();
       tvTexture.dispose();
       lapTexture.dispose();
+      spineTextures.forEach((t) => t.dispose());
       scene.clear();
     };
   }, [navigate]);
