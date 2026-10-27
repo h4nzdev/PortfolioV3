@@ -6,7 +6,6 @@ import { personalInfo } from '../../data/portfolioData';
 import { blogPosts } from '../../data/blog/blogPosts';
 import { formatBlogDate } from '../../utils/blogUtils';
 import { sound } from '../../utils/sound';
-import resumePdf from '../../assets/resume/Hanz_Resume.pdf';
 
 const smoothstep = (min, max, value) => {
   const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
@@ -1068,7 +1067,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       className="relative w-full h-[480vh] bg-[#F5F3EC]"
     >
       {/* Sticky 100vh Fullscreen Pinned Viewport */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-between selection:bg-[#C8B99A] selection:text-[#171715]">
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-end selection:bg-[#C8B99A] selection:text-[#171715]">
         
         {/* 3D WebGL Canvas Layer */}
         <div ref={containerRef} className="absolute inset-0 w-full h-full">
@@ -1080,64 +1079,6 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
         </div>
 
         <div className="absolute inset-0 pointer-events-none bg-noise opacity-25" />
-
-        {/* Minimal HUD: Stage Status & Step Indicators */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pointer-events-none flex items-center justify-between">
-          
-          {/* Dynamic Scene Badge based on scrollProgress */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-[#C8B99A]/60 shadow-md">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#171715]">
-              {scrollProgress < 0.22
-                ? 'Scene 1 / 5 • Codebase Screen Focus'
-                : scrollProgress < 0.48
-                ? 'Scene 2 / 5 • Desktop Workspace'
-                : scrollProgress < 0.74
-                ? 'Scene 3 / 5 • Studio TV Display'
-                : scrollProgress < 0.88
-                ? 'Scene 4 / 5 • Bookshelf • Technical Dispatches'
-                : 'Scene 5 / 5 • Full Studio Environment'}
-            </span>
-          </div>
-
-          {/* Stepper Dots & Scroll Hint */}
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#C8B99A]/50 text-xs font-mono text-[#85847E]">
-              <span>
-                {scrollProgress < 0.22
-                  ? 'Scroll to inspect desktop workspace'
-                  : scrollProgress < 0.48
-                  ? 'Scroll to view studio TV display'
-                  : scrollProgress < 0.74
-                  ? 'Scroll to inspect blog bookshelf'
-                  : scrollProgress < 0.88
-                  ? 'Scroll to reveal full studio'
-                  : 'Scroll down for contact form'}
-              </span>
-              <ArrowDown size={13} className="animate-bounce" />
-            </div>
-
-            <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full border border-[#C8B99A]/50 shadow-xs">
-              {[0, 1, 2, 3, 4].map((idx) => {
-                const isActive =
-                  (idx === 0 && scrollProgress < 0.22) ||
-                  (idx === 1 && scrollProgress >= 0.22 && scrollProgress < 0.48) ||
-                  (idx === 2 && scrollProgress >= 0.48 && scrollProgress < 0.74) ||
-                  (idx === 3 && scrollProgress >= 0.74 && scrollProgress < 0.88) ||
-                  (idx === 4 && scrollProgress >= 0.88);
-                return (
-                  <span
-                    key={idx}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      isActive ? 'bg-[#171715] scale-125' : 'bg-[#C8B99A]/60'
-                    }`}
-                  />
-                );
-              })}
-            </div>
-          </div>
-
-        </div>
 
         {/* Floating Hover Modal for Bookshelf Blogs */}
         {hoveredBlog && (
@@ -1184,27 +1125,9 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
           </div>
         )}
 
-        {/* Scene 4: Quick Action to Browse the Complete Blog Library */}
-        {scrollProgress >= 0.74 && scrollProgress < 0.88 && (
-          <div className="absolute top-20 sm:top-24 right-4 sm:right-8 z-30 pointer-events-auto animate-fadeIn">
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                navigate('/blog');
-              }}
-              className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 hover:bg-white text-[#171715] border border-[#C8B99A]/60 hover:border-[#171715] shadow-lg backdrop-blur-md text-xs font-mono font-bold transition-all cursor-pointer"
-            >
-              <BookOpen size={13} className="text-[#85847E] group-hover:text-[#171715]" />
-              <span>Explore All Dispatches ({blogPosts.length})</span>
-              <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
-          </div>
-        )}
-
         {/* Scene 5 Overlay: Catchy Text Line + Whole Environment Call-to-Action */}
         {scrollProgress >= 0.88 && (
-          <div className="relative z-20 max-w-4xl mx-auto w-full px-4 sm:px-6 pb-12 sm:pb-16 text-center animate-fadeIn pointer-events-none">
+          <div className="relative z-20 max-w-4xl mx-auto w-full px-4 sm:px-6 pb-8 sm:pb-12 mt-auto text-center animate-fadeIn pointer-events-none">
             <div className="p-6 sm:p-8 rounded-3xl bg-white/92 backdrop-blur-xl border border-[#C8B99A]/60 shadow-2xl space-y-4 pointer-events-auto">
               
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#171715] text-[#C8B99A] text-[11px] font-mono uppercase tracking-wider">
@@ -1243,47 +1166,6 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
                 </button>
               </div>
 
-            </div>
-          </div>
-        )}
-
-        {/* Fallback bottom navigation bar for Scenes 1 through 4 */}
-        {scrollProgress < 0.88 && (
-          <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 pointer-events-auto flex items-center justify-between text-xs font-mono text-[#85847E]">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C8B99A]" />
-              <span className="hidden sm:inline">
-                {scrollProgress >= 0.74 && scrollProgress < 0.88
-                  ? 'Click any book on the shelf to open its full technical case study'
-                  : 'Use mouse scroll to travel between 5 architectural scenes'}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <a
-                href={personalInfo.socials.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-full bg-white/80 hover:bg-[#171715] hover:text-[#F8F7F2] border border-[#C8B99A]/50 text-[#171715] transition-colors"
-              >
-                GitHub
-              </a>
-              <a
-                href={personalInfo.socials.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-full bg-white/80 hover:bg-[#171715] hover:text-[#F8F7F2] border border-[#C8B99A]/50 text-[#171715] transition-colors"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={resumePdf}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-full bg-white/80 hover:bg-[#171715] hover:text-[#F8F7F2] border border-[#C8B99A]/50 text-[#171715] transition-colors"
-              >
-                CV (PDF)
-              </a>
             </div>
           </div>
         )}

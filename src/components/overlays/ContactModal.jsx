@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { X, Send, Mail, Copy, Check, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { X, Send, Mail, Copy, Check, Phone, MapPin, ArrowUpRight, Loader2 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from '../SocialIcons';
 import { personalInfo } from '../../data/portfolioData';
 import { sound } from '../../utils/sound';
+import { sendContactMessage } from '../../utils/contactService';
 
 export default function ContactModal({ onClose }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleCopyEmail = () => {
@@ -24,16 +26,26 @@ export default function ContactModal({ onClose }) {
     setTimeout(() => setCopiedPhone(false), 2000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     sound.playClick();
-    const subject = encodeURIComponent(`Project Inquiry from ${formData.name}`);
-    const body = encodeURIComponent(
-      `Hi Hanz,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    // Configured mailto fallback for direct communication
-    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    setIsSubmitting(true);
+
+    const res = await sendContactMessage({
+      name: formData.name,
+      email: formData.email,
+      subject: `Project Inquiry from ${formData.name}`,
+      message: formData.message,
+    });
+
+    setIsSubmitting(false);
+
+    if (res.success) {
+      setSubmitted(true);
+    } else if (res.fallbackMailto) {
+      window.location.href = res.fallbackMailto;
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -189,10 +201,20 @@ export default function ContactModal({ onClose }) {
 
           <button
             type="submit"
-            className="w-full py-3 rounded-full bg-[#171715] text-[#F8F7F2] text-xs sm:text-sm font-medium hover:bg-[#292824] transition-all flex items-center justify-center gap-2 shadow-md"
+            disabled={isSubmitting}
+            className="w-full py-3 rounded-full bg-[#171715] text-[#F8F7F2] text-xs sm:text-sm font-medium hover:bg-[#292824] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer disabled:opacity-60"
           >
-            <Send size={14} />
-            <span>{submitted ? 'Opening Email Client...' : 'Send Message'}</span>
+            {isSubmitting ? (
+              <>
+                <Loader2 size={14} className="animate-spin" />
+                <span>Transmitting Message...</span>
+              </>
+            ) : (
+              <>
+                <Send size={14} />
+                <span>{submitted ? 'Message Sent!' : 'Send Message'}</span>
+              </>
+            )}
           </button>
         </form>
 
