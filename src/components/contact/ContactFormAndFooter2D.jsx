@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle2, Copy, ArrowUp, FileText } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2, Copy, FileText } from 'lucide-react';
 import { GithubIcon as Github, LinkedinIcon as Linkedin } from '../SocialIcons';
 import { personalInfo } from '../../data/portfolioData';
 import { sound } from '../../utils/sound';
@@ -37,11 +37,6 @@ export default function ContactFormAndFooter2D() {
   const scrollToTop = () => {
     sound.playClick();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const scrollToSection = (id) => {
-    sound.playClick();
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -299,30 +294,20 @@ export default function ContactFormAndFooter2D() {
             </p>
           </div>
 
-          {/* Quick Jump Links */}
-          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#66635B]">
-            <button onClick={() => scrollToSection('hero')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              Overview
-            </button>
-            <button onClick={() => scrollToSection('about')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              About
-            </button>
-            <button onClick={() => scrollToSection('projects')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              Selected Work
-            </button>
-            <button onClick={() => scrollToSection('education')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              Education
-            </button>
-            <button onClick={() => scrollToSection('achievements')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              Awards
-            </button>
-            <button onClick={() => scrollToSection('contact-3d')} className="hover:text-[#171715] transition-colors cursor-pointer">
-              Studio
-            </button>
-            <button onClick={scrollToTop} className="p-2 rounded-full bg-white border border-[#C8B99A]/50 text-[#171715] hover:bg-[#171715] hover:text-white transition-colors cursor-pointer" title="Back to top">
-              <ArrowUp size={14} />
-            </button>
-          </div>
+          {/* Brand Logo Monogram */}
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="group flex items-center gap-3 p-1.5 rounded-2xl hover:bg-white/70 transition-all cursor-pointer"
+            title="Return to top"
+            aria-label="Return to top"
+          >
+            <img
+              src="/logo.png"
+              alt="Hanz Crest Monogram"
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+            />
+          </button>
         </div>
 
         {/* Copyright notice */}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SplashScreen from '../components/splash/SplashScreen';
 import HeaderNavbar from '../components/navigation/HeaderNavbar';
 import EditorialMosaicHero from '../components/hero/EditorialMosaicHero';
@@ -11,12 +12,11 @@ import ContactFormAndFooter2D from '../components/contact/ContactFormAndFooter2D
 import { ScrollProgressTopBar, SectionReveal } from '../components/common/ScrollReveal';
 import BackToTop from '../components/common/BackToTop';
 
-import ProjectModal from '../components/overlays/ProjectModal';
 import CertificateModal from '../components/overlays/CertificateModal';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('hero');
-  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [selectedCertIdx, setSelectedCertIdx] = useState(null);
 
   // Scroll spy to highlight active section in Navbar
@@ -90,7 +90,7 @@ export default function Home() {
       {/* 3. Full-Width React Bits <GridMotion /> Projects Showcase */}
       <SectionReveal className="w-full">
         <ProjectsGridMotionSection
-          onOpenProjectModal={(projId) => setSelectedProjectId(projId)}
+          onOpenProjectModal={(projId) => navigate(`/project/${projId}`)}
         />
       </SectionReveal>
 
@@ -116,15 +116,7 @@ export default function Home() {
         <ContactFormAndFooter2D />
       </SectionReveal>
 
-      {/* Case Study & Certificate Modals for Deep Inspection */}
-      {selectedProjectId && (
-        <ProjectModal
-          projectId={selectedProjectId}
-          onClose={() => setSelectedProjectId(null)}
-          onSelectProject={(id) => setSelectedProjectId(id)}
-        />
-      )}
-
+      {/* Certificate Modal for High-Res Credentials Inspection */}
       {selectedCertIdx !== null && (
         <CertificateModal
           certificateIdx={selectedCertIdx}

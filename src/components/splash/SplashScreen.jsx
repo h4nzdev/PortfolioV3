@@ -5,8 +5,9 @@ const T = (x = 0, y = 0, r = 0, s = 1) => `translate(${x}px,${y}px) rotate(${r}d
 
 export default function SplashScreen({ onRevealSite, onComplete }) {
   const [visible, setVisible] = useState(() => {
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
-      return false;
+    if (typeof window !== 'undefined') {
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return false;
+      if (sessionStorage.getItem('portfolio_splash_shown') === 'true') return false;
     }
     return true;
   });
@@ -130,6 +131,9 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
 
     if (splashRef.current) splashRef.current.style.display = 'none';
     setVisible(false);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('portfolio_splash_shown', 'true');
+    }
     if (typeof document !== 'undefined') {
       document.body.style.overflow = '';
     }
@@ -165,6 +169,9 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
     setTimeout(() => {
       if (splash) splash.style.display = 'none';
       setVisible(false);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('portfolio_splash_shown', 'true');
+      }
       if (typeof document !== 'undefined') {
         document.body.style.overflow = '';
       }
@@ -173,11 +180,17 @@ export default function SplashScreen({ onRevealSite, onComplete }) {
   }, [getParts, onRevealSite, onComplete]);
 
   useEffect(() => {
-    // Respect user's reduced-motion preference
-    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+    // Check if reduced-motion or already viewed in this session
+    const hasSeenSplash = typeof window !== 'undefined' && sessionStorage.getItem('portfolio_splash_shown') === 'true';
+    const isReduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    if (hasSeenSplash || isReduced) {
       const site = document.getElementById('site');
       if (site) site.classList.add('in');
       if (splashRef.current) splashRef.current.style.display = 'none';
+      if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+      }
       if (onRevealSite) onRevealSite();
       if (onComplete) onComplete();
       return;

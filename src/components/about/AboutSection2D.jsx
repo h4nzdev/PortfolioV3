@@ -1,8 +1,73 @@
-import { useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { personalInfo, technicalSkills } from '../../data/portfolioData';
 import { Icon } from '@iconify/react';
 import meImg from '../../assets/me.png';
+import GithubContributions from './GithubContributions';
+
+function AnimatedNumber({ to, duration = 1.3, suffix = '', prefix = '', isOrdinal = false }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let startTime = null;
+    let animationFrame = null;
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const current = Math.round(ease * to);
+      setDisplayValue(current);
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, [isInView, to, duration]);
+
+  if (isOrdinal) {
+    const formatted = displayValue === 1 ? '1st' : displayValue === 2 ? '2nd' : displayValue === 3 ? '3rd' : `${displayValue}th`;
+    return (
+      <span ref={ref} className="tabular-nums">
+        {formatted}
+      </span>
+    );
+  }
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {prefix}
+      {displayValue}
+      {suffix}
+    </span>
+  );
+}
+
+function AnimatedDeanBadge() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+
+  return (
+    <motion.span
+      ref={ref}
+      initial={{ opacity: 0, y: 14 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="inline-block"
+    >
+      Dean's
+    </motion.span>
+  );
+}
 
 export default function AboutSection2D() {
   const [inspectedSkill, setInspectedSkill] = useState(null);
@@ -192,14 +257,14 @@ export default function AboutSection2D() {
             </div>
           </motion.div>
 
-          {/* Right Column: Prominent Metric Numbers per Reference */}
+          {/* Right Column: Prominent Metric Numbers with Count Animations */}
           <div className="order-3 lg:order-3 lg:col-span-4 space-y-7 sm:space-y-8 lg:pl-8">
             <div>
               <div className="text-[11px] font-mono text-[#85847E] uppercase tracking-widest mb-1 font-semibold">
                 Year in BSIT
               </div>
               <div className="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Space_Grotesk'] text-[#171715] tracking-tight">
-                4th
+                <AnimatedNumber to={4} isOrdinal duration={1.2} />
               </div>
             </div>
 
@@ -208,7 +273,7 @@ export default function AboutSection2D() {
                 Core Projects
               </div>
               <div className="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Space_Grotesk'] text-[#171715] tracking-tight">
-                6
+                <AnimatedNumber to={6} duration={1.2} />
               </div>
             </div>
 
@@ -217,7 +282,7 @@ export default function AboutSection2D() {
                 Production Stacks
               </div>
               <div className="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Space_Grotesk'] text-[#171715] tracking-tight">
-                30+
+                <AnimatedNumber to={30} suffix="+" duration={1.4} />
               </div>
             </div>
 
@@ -226,7 +291,7 @@ export default function AboutSection2D() {
                 Academic Merit
               </div>
               <div className="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Space_Grotesk'] text-[#171715] tracking-tight">
-                Dean's
+                <AnimatedDeanBadge />
               </div>
               <span className="text-xs font-mono text-[#85847E] block mt-1">
                 Honors Scholar
@@ -368,11 +433,14 @@ export default function AboutSection2D() {
 
       </div>
 
-      {/* Bottom Toolchain Caption (Inside max-w-7xl) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Bottom Toolchain Caption & Live GitHub Contributions Heatmap */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center text-xs font-mono text-[#85847E]">
           Continuous engineering toolchain spanning Frontend, Backend, AI integrations, BaaS, and Cloud Deployments.
         </div>
+
+        {/* Live GitHub Contribution Matrix & Open Source Repositories */}
+        <GithubContributions />
       </div>
     </section>
   );

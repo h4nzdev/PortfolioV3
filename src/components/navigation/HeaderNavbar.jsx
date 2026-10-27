@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Volume2, VolumeX, FileText, Send, Menu, X, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Volume2, VolumeX, FileText, Send, Menu, X, ArrowUpRight, BookOpen } from 'lucide-react';
 import { sound } from '../../utils/sound';
 import resumePdf from '../../assets/resume/Hanz_Resume.pdf';
 
@@ -101,6 +102,17 @@ export default function HeaderNavbar({ activeSection, onNavigate }) {
             {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="text-[#171715]" />}
           </button>
 
+          {/* Blog / Journal Link */}
+          <Link
+            to="/blog"
+            onClick={() => sound.playClick()}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/85 border border-[#C8B99A]/50 text-xs font-mono font-medium text-[#292824] hover:bg-[#E5DCCB]/40 hover:text-[#171715] transition-all backdrop-blur-md shadow-xs"
+            title="Read Engineering Dispatches & Case Studies"
+          >
+            <BookOpen size={13} className="text-[#85847E]" />
+            <span>Blog</span>
+          </Link>
+
           {/* Resume PDF */}
           <a
             href={resumePdf}
@@ -162,15 +174,29 @@ export default function HeaderNavbar({ activeSection, onNavigate }) {
             ))}
           </div>
           <div className="mt-3 pt-3 border-t border-[#C8B99A]/40 flex items-center justify-between px-1">
-            <a
-              href={resumePdf}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-mono text-[#292824] hover:underline flex items-center gap-1"
-            >
-              <FileText size={13} />
-              <span>View CV</span>
-            </a>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/blog"
+                onClick={() => {
+                  sound.playClick();
+                  setMobileMenuOpen(false);
+                }}
+                className="text-xs font-mono text-[#292824] hover:underline flex items-center gap-1 font-semibold"
+              >
+                <BookOpen size={13} className="text-[#85847E]" />
+                <span>Blog</span>
+              </Link>
+              <span className="text-[#C8B99A]">|</span>
+              <a
+                href={resumePdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-[#292824] hover:underline flex items-center gap-1"
+              >
+                <FileText size={13} />
+                <span>CV</span>
+              </a>
+            </div>
             <button
               onClick={() => handleNavClick('contact')}
               className="px-3 py-1.5 rounded-full bg-[#171715] text-[#F8F7F2] text-xs font-mono cursor-pointer"

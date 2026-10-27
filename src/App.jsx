@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 
 const App = () => {
   return (
@@ -13,6 +15,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:id" element={<ProjectDetails />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
       </Routes>
     </div>
   );

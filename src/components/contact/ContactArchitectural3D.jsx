@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
-import { Send, CheckCircle2, Copy, ArrowDown, Sparkles, ArrowUpRight, BookOpen } from 'lucide-react';
+import { Send, CheckCircle2, Copy, ArrowDown, Sparkles, ArrowUpRight, ArrowRight, BookOpen } from 'lucide-react';
 import { personalInfo } from '../../data/portfolioData';
+import { blogPosts } from '../../data/blog/blogPosts';
+import { formatBlogDate } from '../../utils/blogUtils';
 import { sound } from '../../utils/sound';
 import resumePdf from '../../assets/resume/Hanz_Resume.pdf';
 
@@ -111,7 +114,7 @@ function createTVCanvasTexture() {
 
   ctx.fillStyle = '#85847E';
   ctx.font = '16px "JetBrains Mono", monospace';
-  ctx.fillText('• Check the Bookshelf on the left for 4 Technical Blog Volumes & Research', 110, 605);
+  ctx.fillText('• Check the Bookshelf on the left to read 4 Technical Dispatches', 110, 605);
   ctx.fillText('• Scroll down to explore all 5 scenes & the interactive Contact Portal', 110, 640);
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -399,12 +402,12 @@ function createLaptopCodeCanvasTexture() {
 }
 
 export default function ContactArchitectural3D({ onScrollToContactForm }) {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [copied, setCopied] = useState(false);
   const [hoveredBlog, setHoveredBlog] = useState(null);
-  const [toastMessage, setToastMessage] = useState(null);
   const [mousePixelPos, setMousePixelPos] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -587,80 +590,34 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
 
     const interactiveBlogMeshes = [];
 
-    const blogsList = [
-      {
-        id: 'blog-1',
-        title: 'Architecting Distributed Frontends',
-        subtitle: 'From monolithic React apps to micro-frontends & sub-100ms hydration.',
-        spineLabel: 'SYS ARCH',
-        category: 'SYSTEMS ARCHITECTURE',
-        readTime: '6 MIN READ',
-        date: 'OCTOBER 2026',
-        status: 'COMING SOON',
-        synopsis: 'A deep architectural dissection on decoupling large user interfaces, isolating module boundaries, and achieving sub-100ms client hydration.',
-        color: '#171715',
-        textColor: '#F8F7F2',
-        x: -0.36,
-        y: 1.62,
-        w: 0.12,
-        h: 0.5,
-        d: 0.3,
-      },
-      {
-        id: 'blog-2',
-        title: 'Multi-Agent Autonomous Workflows',
-        subtitle: 'Orchestrating agentic loops, stateful tool-calling & LLM execution.',
-        spineLabel: 'AI AGENTS',
-        category: 'ARTIFICIAL INTELLIGENCE',
-        readTime: '8 MIN READ',
-        date: 'NOVEMBER 2026',
-        status: 'COMING SOON',
-        synopsis: 'Production-tested patterns for designing collaborative agent networks that plan, inspect context, run automated tests, and recover from failures.',
-        color: '#292824',
-        textColor: '#C8B99A',
-        x: -0.21,
-        y: 1.63,
-        w: 0.12,
-        h: 0.52,
-        d: 0.3,
-      },
-      {
-        id: 'blog-3',
-        title: 'Spatial Web & WebGL Performance',
-        subtitle: 'Optimizing Three.js draw calls, shader instancing & GPU memory.',
-        spineLabel: '3D GRAPHICS',
-        category: 'SPATIAL COMPUTING',
-        readTime: '5 MIN READ',
-        date: 'DECEMBER 2026',
-        status: 'COMING SOON',
-        synopsis: 'Benchmarking techniques for rendering high-fidelity architectural 3D environments at locked 60 FPS across low-power and mobile browsers.',
-        color: '#383631',
-        textColor: '#F8F7F2',
-        x: -0.06,
-        y: 1.61,
-        w: 0.12,
-        h: 0.48,
-        d: 0.3,
-      },
-      {
-        id: 'blog-4',
-        title: 'The 1.27 GPA Engineering Blueprint',
-        subtitle: 'Translating academic rigor and CS foundational theory into production code.',
-        spineLabel: 'DISCIPLINE',
-        category: 'ENGINEERING CRAFT',
-        readTime: '4 MIN READ',
-        date: 'JANUARY 2027',
-        status: 'COMING SOON',
-        synopsis: 'How maintaining Dean’s List academic discipline shapes systems thinking, rigorous documentation integrity, and dependable software delivery.',
-        color: '#C8B99A',
-        textColor: '#171715',
-        x: 0.1,
-        y: 1.64,
-        w: 0.13,
-        h: 0.54,
-        d: 0.32,
-      },
+    const spineConfigs = [
+      { spineLabel: 'ERP ARCH', color: '#171715', textColor: '#F8F7F2', x: -0.36, y: 1.62, w: 0.12, h: 0.5, d: 0.3 },
+      { spineLabel: 'EDGE AI', color: '#292824', textColor: '#C8B99A', x: -0.21, y: 1.63, w: 0.12, h: 0.52, d: 0.3 },
+      { spineLabel: 'DEVOPS', color: '#383631', textColor: '#F8F7F2', x: -0.06, y: 1.61, w: 0.12, h: 0.48, d: 0.3 },
+      { spineLabel: 'REACT 19', color: '#C8B99A', textColor: '#171715', x: 0.1, y: 1.64, w: 0.13, h: 0.54, d: 0.32 },
     ];
+
+    const blogsList = blogPosts.slice(0, 4).map((post, idx) => {
+      const conf = spineConfigs[idx];
+      return {
+        id: post.id,
+        slug: post.slug,
+        title: post.title,
+        category: post.category.toUpperCase(),
+        readTime: post.readTime.toUpperCase(),
+        date: formatBlogDate(post.publishedDate).toUpperCase(),
+        status: 'READ DISPATCH',
+        synopsis: post.excerpt,
+        spineLabel: conf.spineLabel,
+        color: conf.color,
+        textColor: conf.textColor,
+        x: conf.x,
+        y: conf.y,
+        w: conf.w,
+        h: conf.h,
+        d: conf.d,
+      };
+    });
 
     blogsList.forEach((blog) => {
       const spineTex = createSpineTexture(blog.spineLabel, blog.color, blog.textColor);
@@ -680,8 +637,8 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       bookMesh.userData = {
         isBlog: true,
         id: blog.id,
+        slug: blog.slug,
         title: blog.title,
-        subtitle: blog.subtitle,
         category: blog.category,
         readTime: blog.readTime,
         date: blog.date,
@@ -933,9 +890,10 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       if (intersects.length > 0) {
         sound.playClick();
         const hit = intersects[0].object;
-        if (hit.userData.isBlog) {
-          setToastMessage(`"${hit.userData.title}" is coming soon. Stay tuned!`);
-          setTimeout(() => setToastMessage(null), 3200);
+        if (hit.userData.isBlog && hit.userData.slug) {
+          navigate(`/blog/${hit.userData.slug}`);
+        } else if (hit.userData.isBlog) {
+          navigate('/blog');
         }
       }
     };
@@ -1101,7 +1059,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
       lapTexture.dispose();
       scene.clear();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <section
@@ -1123,14 +1081,6 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
 
         <div className="absolute inset-0 pointer-events-none bg-noise opacity-25" />
 
-        {/* Toast Notification when clicking a Coming Soon Blog */}
-        {toastMessage && (
-          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-[#171715]/95 text-[#F8F7F2] border border-[#C8B99A]/60 shadow-2xl backdrop-blur-xl text-xs font-mono flex items-center gap-2 animate-fadeIn">
-            <Sparkles size={14} className="text-[#C8B99A]" />
-            <span>{toastMessage}</span>
-          </div>
-        )}
-
         {/* Minimal HUD: Stage Status & Step Indicators */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pointer-events-none flex items-center justify-between">
           
@@ -1145,7 +1095,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
                 : scrollProgress < 0.74
                 ? 'Scene 3 / 5 • Studio TV Display'
                 : scrollProgress < 0.88
-                ? 'Scene 4 / 5 • Blog Archive (Coming Soon)'
+                ? 'Scene 4 / 5 • Bookshelf • Technical Dispatches'
                 : 'Scene 5 / 5 • Full Studio Environment'}
             </span>
           </div>
@@ -1204,8 +1154,9 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
                   <BookOpen size={12} className="text-[#C8B99A]" />
                   <span>{hoveredBlog.category}</span>
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-                  {hoveredBlog.status}
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
+                  <span>{hoveredBlog.status}</span>
+                  <ArrowRight size={10} />
                 </span>
               </div>
 
@@ -1224,7 +1175,30 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
                   <ArrowUpRight size={11} />
                 </span>
               </div>
+
+              <div className="pt-1 text-[11px] font-mono text-[#C8B99A] font-semibold flex items-center gap-1">
+                <span>Click book on shelf to read dispatch</span>
+                <ArrowRight size={12} />
+              </div>
             </div>
+          </div>
+        )}
+
+        {/* Scene 4: Quick Action to Browse the Complete Blog Library */}
+        {scrollProgress >= 0.74 && scrollProgress < 0.88 && (
+          <div className="absolute top-20 sm:top-24 right-4 sm:right-8 z-30 pointer-events-auto animate-fadeIn">
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                navigate('/blog');
+              }}
+              className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 hover:bg-white text-[#171715] border border-[#C8B99A]/60 hover:border-[#171715] shadow-lg backdrop-blur-md text-xs font-mono font-bold transition-all cursor-pointer"
+            >
+              <BookOpen size={13} className="text-[#85847E] group-hover:text-[#171715]" />
+              <span>Explore All Dispatches ({blogPosts.length})</span>
+              <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </button>
           </div>
         )}
 
@@ -1280,7 +1254,7 @@ export default function ContactArchitectural3D({ onScrollToContactForm }) {
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8B99A]" />
               <span className="hidden sm:inline">
                 {scrollProgress >= 0.74 && scrollProgress < 0.88
-                  ? 'Hover or click books on the shelf to preview upcoming blog articles'
+                  ? 'Click any book on the shelf to open its full technical case study'
                   : 'Use mouse scroll to travel between 5 architectural scenes'}
               </span>
             </div>
